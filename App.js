@@ -1,32 +1,41 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { vh, vw } from 'react-native-expo-viewport-units';
 import Plank from './js/Plank';
 import Weight from './js/Weight'
 
 
 export default function App() {
-  //calculate plank torque
-  //TODO: Add count and direction to weight
-  //TODO: Add balls UI
+  //TODO: calculate plank torque - done
+  //TODO: Add count and direction to weight - done
+  //TODO: Add balls UI - done
   //TODO: Make plank svg and align balls to plank
   //TODO: 3 colors of balls
-  //TODO: Add sections
+  //TODO: Add sections - done
+
   return (
-    <View style={styles.container}>
+    <View >
+    <View style={[styles.container,{flexDirection: "row"}]}>
+      <View style={{ flex: 1, backgroundColor: 'rgba(225, 55, 14,0.2)', height:vh(100), borderTopColor: 'rgb(225, 55, 14)', borderTopWidth:5, borderRightColor: 'gray', borderRightWidth:2}} />
+      <View style={{ flex: 1,  height:vh(100),  borderRightColor: 'gray', borderRightWidth:2 }} />
+      <View style={{ flex: 1, height:vh(100) }} />
+      </View>
       <Plank degree= {torque(30,15)}/>
-      <Weight count={15} direction={torque(30,15)}/>
+      <Weight count={15} direction={torque(30,15)}/> 
        <StatusBar style="auto" />
+     
      </View>
   );
+  
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor:'#000000'
   },
 });
 const torque = function(tagged,finished){
@@ -36,5 +45,6 @@ const torque = function(tagged,finished){
   if (Math.abs(netWeight)>=20){
     return (netWeight/Math.abs(netWeight))*15;
   }
+  console.log("degree is"+(netWeight/20)*15);
   return (netWeight/20)*15;
 }
