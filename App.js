@@ -7,10 +7,15 @@ import Weight from './js/Weight'
 
 export default function App() {
   //calculate plank torque
+  //TODO: Add count and direction to weight
+  //TODO: Add balls UI
+  //TODO: Make plank svg and align balls to plank
+  //TODO: 3 colors of balls
+  //TODO: Add sections
   return (
     <View style={styles.container}>
       <Plank degree= {torque(30,15)}/>
-      <Weight/>
+      <Weight count={15} direction={torque(30,15)}/>
        <StatusBar style="auto" />
      </View>
   );

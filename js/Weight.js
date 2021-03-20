@@ -1,10 +1,11 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import { StyleSheet, Text, View, Image, Dimensions } from 'react-native';
 
 const Weight = function(props){
-    const canvasRef = useRef(null)
-    const handleCanvas = function(ctx){
-        // var ctx = canvas.getContext("2d"),
+    const canvas = useRef(null)
+    useEffect(() =>{
+        const ctx = canvas.current.getContext("2d")
+        ctx.save();
         var radius = 9,                         // ball radius
         deg = -60 / 180 * Math.PI,          // direction of row start -60°
         balls = 15,                         // number of balls to draw
@@ -41,17 +42,12 @@ const Weight = function(props){
         ctx.moveTo(x + radius, y); ctx.arc(x, y, radius, 0, 6.28);
         ctx.closePath();
         }
-    }
+    });
     return(
         <canvas
-        ref={canvasRef}
+        ref={canvas}
         height={400}
         
-        onClick={e => {
-          const canvas = canvasRef.current
-          const ctx = canvas.getContext('2d')
-          handleCanvas(ctx)
-        }}
       />
     )
 
