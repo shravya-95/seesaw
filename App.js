@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import Plank from './js/Plank';
 import Weight from './js/Weight'
@@ -11,10 +11,12 @@ export default function App() {
   //TODO: calculate plank torque - done
   //TODO: Add count and direction to weight - done
   //TODO: Add balls UI - done
-  //TODO: Make plank svg and align balls to plank
-  //TODO: 3 colors of balls
+  //TODO: Make plank svg and align balls to plank - done
+  //TODO: 3 colors of balls - done
   //TODO: Add sections - done
-
+  //TODO: Add capture balls
+  //TODO: Make responsive - Done
+  const [plankLayout, setPlankLayout] = useState(null);
   return (
     <View >
       
@@ -23,10 +25,15 @@ export default function App() {
       <View style={{ flex: 1,  height:vh(100),  borderRightColor: 'gray', borderRightWidth:2 }} />
       <View style={{ flex: 1, height:vh(100) }} />
       </View>
-      <View style={[styles.plank, {transform:[{rotate:torque(30,15)+'deg'}]}]}>
+      
+      <View style={[styles.plank, {transform:[{rotate:torque(5,10)+'deg'}]}]}>
+      <Weight count={10} direction={torque(5,10)} type={"captured"}/> 
+      <Weight count={5} direction={torque(5,10)} type={"tagged"}/> 
+      <Weight count={10} direction={torque(5,10)} type={"finished"}/> 
+      
       <PlankSvg/>
       </View>
-      <Weight count={18} direction={torque(30,15)}/> 
+      
        <StatusBar style="auto" />
      
      </View>
@@ -43,15 +50,15 @@ const styles = StyleSheet.create({
   },
   plank:{
     flex:1,
-    width: vw(100),
-    height: win.height/2,
+    width: 'auto',
+    height: 'auto',
     position:'absolute',
-    top:vh(60),
-    left:vw(1),
+    top:vh(40),
+    paddingBottom:0,
     resizeMode:'contain',  
-    zIndex:4 
-  }
+     }
 });
+
 const torque = function(tagged,finished){
   //max tipping weight on each side = 20
   //max degree of inclination = 45
