@@ -6,18 +6,18 @@ const Weight = function(props){
     const canvasRef = useRef(null);
     useEffect(() =>{
         var ctx = canvasRef.current.getContext("2d");
-        ctx.clearRect(0,0,vw(100),vh(100));
+        // ctx.clearRect(0,0,vw(100),vh(100));
         ctx.save();
         var radius = 9,
         direction = props.direction - 25,                         // ball radius
         deg = -60 / 180 * Math.PI,          // direction of row start -60°
-        plankDeg = - direction / 180 * Math.PI,
-        balls = 15,                         // number of balls to draw
+        plankDeg =  - direction / 180 * Math.PI,
+        balls = props.count,                         // number of balls to draw
         drawn = 0,                          // count balls drawn on current row
         rowLen = 1,                         // max length of current row (first=1)
-        x = 9,                            // start point
+        x = 140,                            // start point
         y = 131,                            //
-        cx = 9, cy =131,                  // replicates start point + offsets
+        cx = 140, cy =131,                  // replicates start point + offsets
         v = {                               // vector
             x: radius * 2 * Math.cos(deg),
             y: radius * 2 * Math.sin(deg)

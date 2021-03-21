@@ -1,4 +1,9 @@
-<svg width="812" height="121" viewBox="0 0 812 121" fill="none" xmlns="http://www.w3.org/2000/svg">
+import * as React from 'react';
+import Svg, { Circle, Rect } from 'react-native-svg';
+
+export default function PlankSvg(props) {
+  return (
+    <svg width="812" height="121" viewBox="0 0 812 121" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g filter="url(#filter0_i)">
 <rect x="-13.3948" y="0.483154" width="848.805" height="7" rx="3.5" transform="rotate(7.64402 -13.3948 0.483154)" fill="#BABABA"/>
 </g>
@@ -36,3 +41,7 @@
 </filter>
 </defs>
 </svg>
+
+
+  );
+}
