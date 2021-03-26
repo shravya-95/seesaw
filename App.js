@@ -17,21 +17,23 @@ export default function App() {
   //TODO: Add capture balls
   //TODO: Make responsive - Done
   const [plankLayout, setPlankLayout] = useState(null);
+  var tagged = 5;
+  var finished = 13;
+  var capture=5;
   return (
     <View >
       
     <View style={[styles.container,{flexDirection: "row"}]}>
-      <View style={{ flex: 1, backgroundColor: 'rgba(225, 55, 14,0.2)', height:vh(100), borderTopColor: 'rgb(225, 55, 14)', borderTopWidth:5, borderRightColor: 'gray', borderRightWidth:2}} />
+      <View style={{ flex: 1,  height:vh(100),borderTopWidth:5, borderRightColor: 'gray', borderRightWidth:2}} />
       <View style={{ flex: 1,  height:vh(100),  borderRightColor: 'gray', borderRightWidth:2 }} />
       <View style={{ flex: 1, height:vh(100) }} />
       </View>
       
-      <View style={[styles.plank, {transform:[{rotate:torque(5,10)+'deg'}]}]}>
-      <Weight count={10} direction={torque(5,10)} type={"captured"}/> 
-      <Weight count={5} direction={torque(5,10)} type={"tagged"}/> 
-      <Weight count={10} direction={torque(5,10)} type={"finished"}/> 
+      <View style={[styles.plank, {transform:[{rotate:torque(tagged,finished)+'deg'}]}]}>
+      <Weight count={tagged} direction={torque(tagged,finished)} type={"tagged"}/> 
+      <Weight count={finished} direction={torque(tagged,finished)} type={"finished"}/> 
+      <Plank/>
       
-      <PlankSvg/>
       </View>
       
        <StatusBar style="auto" />
@@ -54,6 +56,7 @@ const styles = StyleSheet.create({
     height: 'auto',
     position:'absolute',
     top:vh(40),
+    left:vw(10),
     paddingBottom:0,
     resizeMode:'contain',  
      }

@@ -1,23 +1,24 @@
 import React, {useEffect, useRef} from 'react';
-import { StyleSheet, Text, View, Image, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Image, Dimensions, PanResponder, Animated } from 'react-native';
 import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
 
-const Weight = function(props){
+
+const WeightFunc = function(props){
     const canvasRef = useRef(null);
     useEffect(() =>{
         var ctx = canvasRef.current.getContext("2d");
         // ctx.clearRect(0,0,vw(100),vh(100));
         ctx.save();
-        var radius = 9,
+        var radius = vh(2),
         direction = props.direction,                         // ball radius
         deg = -60 / 180 * Math.PI,          // direction of row start -60°
         plankDeg =   -(direction-60) / 180 * Math.PI,
         balls = props.count,                         // number of balls to draw
         drawn = 0,                          // count balls drawn on current row
         rowLen = 1,                         // max length of current row (first=1)
-        x = 13,                            // start point
-        y = 90,                            //
-        cx = 13, cy =90,                  // replicates start point + offsets
+        x = 0,                            // start point
+        y = vh(22),                            //
+        cx = 0, cy =vh(22),                  // replicates start point + offsets
         v = {                               // vector
             x: radius * 2.5 * Math.cos(deg),
             y: radius * 2.5 * Math.sin(deg)
@@ -35,26 +36,27 @@ const Weight = function(props){
         ctx.fillStyle = "#E1370E";
 
         if (props.type=="tagged"){
-            if (direction<0){
-                x=13
-                cx=13
+            if (direction>0){
+                x=radius*4
+                cx=radius*4
             }
             else{
-                x=vw(33) - radius
-                cx=vw(33) - radius
+                x=vw(3)
+                cx=vw(3)
             }
         }
         
 
 
         if (props.type=="finished"){
-            if (direction<0){
-                x=vw(100)-177
-                cx=vw(100)-177
+            // direction=direction*(-1)
+            if (direction>0){
+                x=vw(60)
+                cx=vw(60)
             }
             else{
-                x=vw(100)-20
-                cx=vw(100)-20
+                x=vw(80)
+                cx=vw(80)
             }
             
             ctx.fillStyle = "#33B807";
@@ -62,8 +64,8 @@ const Weight = function(props){
         }
         if (props.type=="captured"){
             if (direction<0){
-            x=vw(100)/3 + radius +5
-            cx=vw(100)/3 + radius + 5
+            x=vw(100)/3 + radius +3
+            cx=vw(100)/3 + radius + 3
             ctx.fillStyle = "#fff";
             ctx.fill()
             }
@@ -109,7 +111,7 @@ const Weight = function(props){
                 
                 drawBall(cx, cy);                     // draw ball
                 // cx -= radius * 2;
-                cx -= pv.x;
+                cx += pv.x;
                 cy += pv.y;                     // move diameter of ball to left (in this case)
                 drawn++;                              // increase balls on row count
                 
@@ -118,7 +120,7 @@ const Weight = function(props){
                                   
                     
                     if (maxRowLen<5){  
-                        cx = x - v.x * rowLen; 
+                        cx = x + v.x * rowLen; 
                         cy = y + v.y * rowLen;                               
                         rowLen++;
                         maxRowLen++;
@@ -141,7 +143,7 @@ const Weight = function(props){
     
     
         function drawBall(x, y) {
-            ctx.lineWidth = 3;
+            ctx.lineWidth = 2;
             ctx.moveTo(x + radius, y); 
             ctx.arc(x, y, radius, 0, 6.28);
             ctx.stroke();
@@ -151,16 +153,58 @@ const Weight = function(props){
             }
             else
             ctx.strokeStyle = "#33B807"
+//             <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+// <circle cx="15.0259" cy="15.026" r="10" transform="rotate(22.0842 15.0259 15.026)" stroke="#E1370E" stroke-width="2"/>
+// </svg>
 
             
         }
+        function handleMouseDown(e){
+            mouseX=parseInt(e.clientX-offsetX);
+            mouseY=parseInt(e.clientY-offsetY);
+      
+            // mousedown stuff here
+            lastX=mouseX;
+            lastY=mouseY;
+            mouseIsDown=true;
+      
+          }
+          
+    function handleMouseUp(e){
+        mouseX=parseInt(e.clientX-offsetX);
+        mouseY=parseInt(e.clientY-offsetY);
+  
+        // mouseup stuff here
+        mouseIsDown=false;
+      }
+      function handleMouseMove(e){
+        if(!mouseIsDown){ return; }
+  
+        mouseX=parseInt(e.clientX-offsetX);
+        mouseY=parseInt(e.clientY-offsetY);
+  
+        // mousemove stuff here
+        for(var i=0;i<ships.length;i++){
+            var ship=ships[i];
+            drawShip(ship);
+            if(ctx.isPointInPath(lastX,lastY)){ 
+                ship.x+=(mouseX-lastX);
+                ship.y+=(mouseY-lastY);
+                ship.right=ship.x+ship.width;
+                ship.bottom=ship.y+ship.height;
+            }
+        }
+        lastX=mouseX;
+        lastY=mouseY;
+        drawAllShips();
+      }
     });
     return(
         <canvas
         ref={canvasRef}
         style={{position:'absolute'}}
         height='auto'
-        width={vw(100)}        
+        width={vw(80)}        
         /> 
     );
 
