@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import Plank from './js/Plank';
 import Weight from './js/Weight'
+import Ball from './js/Ball'
 import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
 
 
@@ -30,10 +31,8 @@ export default function App() {
       </View>
       
       <View style={[styles.plank, {transform:[{rotate:torque(tagged,finished)+'deg'}]}]}>
-      <Weight count={tagged} direction={torque(tagged,finished)} type={"tagged"}/> 
-      <Weight count={finished} direction={torque(tagged,finished)} type={"finished"}/> 
+      <Ball direction={torque(tagged,finished)} count={15} />
       <Plank/>
-      
       </View>
       
        <StatusBar style="auto" />

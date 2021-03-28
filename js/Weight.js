@@ -9,16 +9,40 @@ export default class Weight extends Component{
         this.props=props;
         this.canvasRef=React.createRef();
         this.saveContext = this.saveContext.bind(this);
+        this.state = {
+            pan: new Animated.ValueXY()
+          };
     }
     saveContext(ctx) {
         this.ctx = ctx;
         this.width = this.ctx.canvas.width;
         this.height = this.ctx.canvas.height;
       }
+    componentWillMount(){
+        this._val = { x:0, y:0 }
+        this.state.pan.addListener((value) => this._val = value);
+        this.panResponder = PanResponder.create({
+            onStartShouldSetPanResponder: (e, gesture) => true,
+            onPanResponderGrant: () => {
+                this.state.pan.setOffset({
+                  x: this.state.pan.x._value,
+                  y: this.state.pan.y._value
+                });
+              },
+            onPanResponderMove: (Animated.event([
+              null, { dx: this.state.pan.x, dy: this.state.pan.y }
+            ])),
+            // adjusting delta value
+            
+          });
+          
 
+    }
     componentDidMount = () =>{
-            // var ctx = this.canvasRef.current.getContext("2d");
-            // ctx.clearRect(0,0,vw(100),vh(100));
+       
+
+
+
             const props = this.props;
             const canvas = this.canvasRef.current;
             const ctx = canvas.getContext('2d');
@@ -170,54 +194,35 @@ export default class Weight extends Component{
 
                 
             }
-            function handleMouseDown(e){
-                mouseX=parseInt(e.clientX-offsetX);
-                mouseY=parseInt(e.clientY-offsetY);
-        
-                // mousedown stuff here
-                lastX=mouseX;
-                lastY=mouseY;
-                mouseIsDown=true;
-        
-            }
             
-            function handleMouseUp(e){
-                mouseX=parseInt(e.clientX-offsetX);
-                mouseY=parseInt(e.clientY-offsetY);
-        
-                // mouseup stuff here
-                mouseIsDown=false;
-            }
-            function handleMouseMove(e){
-                if(!mouseIsDown){ return; }
-        
-                mouseX=parseInt(e.clientX-offsetX);
-                mouseY=parseInt(e.clientY-offsetY);
-        
-                // mousemove stuff here
-                for(var i=0;i<ships.length;i++){
-                    var ship=ships[i];
-                    drawShip(ship);
-                    if(ctx.isPointInPath(lastX,lastY)){ 
-                        ship.x+=(mouseX-lastX);
-                        ship.y+=(mouseY-lastY);
-                        ship.right=ship.x+ship.width;
-                        ship.bottom=ship.y+ship.height;
-                    }
-                }
-                lastX=mouseX;
-                lastY=mouseY;
-                drawAllShips();
-                }
+            const AnimatesCanvas = Animated.createAnimatedComponent(Weight);
+            
             }
         render(){
+            const panStyle = {
+                transform: this.state.pan.getTranslateTransform()
+              }
+            
             return(
+                <AnimatesCanvas
+                {...this.panResponder.panHandlers}
+                style={{transform:  [{ translateX: this.state.pan.x }, { translateY: this.state.pan.y }]}}>
+                <View style={styles.box} />
                 <canvas
                 ref={this.canvasRef}
                 style={{position:'absolute'}}
                 height='auto'
                 width={vw(80)}        
-                /> )
+                />
+                </AnimatesCanvas> )
         }
             
     }
+    const styles = StyleSheet.create({
+        box: {
+            height: 150,
+            width: 150,
+            backgroundColor: "blue",
+            borderRadius: 5
+          }
+        });
