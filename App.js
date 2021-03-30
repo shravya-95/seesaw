@@ -4,19 +4,18 @@ import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import Plank from './js/Plank';
 import Weight from './js/Weight'
 import Ball from './js/Ball'
+import PureCanvas from './js/PureCanvas'
 import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
 
 
 import PlankSvg from './js/PlankSvg'
 export default function App() {
-  //TODO: calculate plank torque - done
-  //TODO: Add count and direction to weight - done
-  //TODO: Add balls UI - done
-  //TODO: Make plank svg and align balls to plank - done
-  //TODO: 3 colors of balls - done
-  //TODO: Add sections - done
-  //TODO: Add capture balls
-  //TODO: Make responsive - Done
+  //TODO: if ball in left section - show alert
+  //TODO: if ball next section - You still need to finish some steps dialogue
+    //TODO: 
+  //TODO: if ball in prev section or same section - spring back
+  //TODO: character?
+  //TODO: tap - show detail
   const [plankLayout, setPlankLayout] = useState(null);
   var tagged = 5;
   var finished = 13;
@@ -34,7 +33,6 @@ export default function App() {
       <Ball direction={torque(tagged,finished)} count={15} />
       <Plank/>
       </View>
-      
        <StatusBar style="auto" />
      
      </View>

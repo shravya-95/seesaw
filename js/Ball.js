@@ -63,9 +63,7 @@ export default class Ball extends React.Component {
   renderBalls(){
       return this.itemProps.map((item)=>{
           return(
-              <View key={item.key}>
-                  <PureCanvas coords={item} />
-              </View>
+                  <PureCanvas coords={item} key={item.key} />
               
           );
       });

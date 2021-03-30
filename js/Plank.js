@@ -25,7 +25,7 @@ var plankStyle = StyleSheet.create({
         height: win.height/2,
         position:'absolute',
         resizeMode:'contain',  
-        zIndex:4  
+        zIndex:-1
     }
 })
 
