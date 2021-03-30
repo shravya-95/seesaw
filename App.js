@@ -14,14 +14,15 @@ export default function App() {
   //TODO: if ball next section - You still need to finish some steps dialogue
     //TODO: 
   //TODO: if ball in prev section or same section - spring back
+  //TODO: make it look like design
   //TODO: character?
   //TODO: tap - show detail
   const [plankLayout, setPlankLayout] = useState(null);
-  var tagged = 5;
-  var finished = 13;
+  var tagged = 1;
+  var finished = 10;
   var capture=5;
   return (
-    <View >
+    <View style={{overflow:'hidden'}}>
       
     <View style={[styles.container,{flexDirection: "row"}]}>
       <View style={{ flex: 1,  height:vh(100),borderTopWidth:5, borderRightColor: 'gray', borderRightWidth:2}} />
@@ -30,7 +31,10 @@ export default function App() {
       </View>
       
       <View style={[styles.plank, {transform:[{rotate:torque(tagged,finished)+'deg'}]}]}>
-      <Ball direction={torque(tagged,finished)} count={15} />
+      <Ball direction={torque(tagged,finished)} count={tagged} type="tagged" />
+      <Ball direction={torque(tagged,finished)} count={capture} type="captured" />
+      <Ball direction={torque(tagged,finished)} count={finished} type="finished" />
+
       <Plank/>
       </View>
        <StatusBar style="auto" />
@@ -45,7 +49,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor:'#000000'
+    backgroundColor:'#000000',
   },
   plank:{
     flex:1,
@@ -55,7 +59,7 @@ const styles = StyleSheet.create({
     top:vh(40),
     left:vw(10),
     paddingBottom:0,
-    resizeMode:'contain',  
+    resizeMode:'contain'
      }
 });
 

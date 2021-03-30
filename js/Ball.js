@@ -7,27 +7,38 @@ export default class Ball extends React.Component {
       super(props);
       this.saveContext = this.saveContext.bind(this);
       var props = this.props;
-      var radius = vh(2),
+      var radius = vw(2),
           direction = props.direction,                         // ball radius
           deg = -60 / 180 * Math.PI,          // direction of row start -60°
-          plankDeg =   -(direction-60) / 180 * Math.PI,
+          plankDeg =   -(direction-65) / 180 * Math.PI,
           balls = props.count,                         // number of balls to draw
           drawn = 0,                          // count balls drawn on current row
           rowLen = 1,                         // max length of current row (first=1)
           x = 0,                            // start point
-          y = vh(22),                            //
-          cx = 0, cy =vh(22),                  // replicates start point + offsets
+          y = vh(19),                            //
+          cx = 0, cy =vh(19),                  // replicates start point + offsets
           v = {                               // vector
-              x: radius * 2.5 * Math.cos(deg),
-              y: radius * 2.5 * Math.sin(deg)
+              x: radius * 1.5 * Math.cos(deg),
+              y: radius * 1.5 * Math.sin(deg)
           },
           pv = {
               //vector for the plank
-              x:radius * 2.5 * Math.cos(plankDeg),
-              y: radius * 2.5 * Math.sin(plankDeg)
+              x:radius * 1.5 * Math.cos(plankDeg),
+              y: radius * 1.5 * Math.sin(plankDeg)
           },
           i;
       this.itemProps=[]
+
+      if (props.type == "finished"){
+        x=vw(60)
+        cx=vw(60)
+      }
+      if (props.type=="captured"){
+        x=vw(100)/3 + radius +3
+        cx=vw(100)/3 + radius + 3
+      }
+      
+
       for(i = 0; i <  balls; i++) {
           var itemProp = {
               itemCx:cx,
@@ -63,7 +74,7 @@ export default class Ball extends React.Component {
   renderBalls(){
       return this.itemProps.map((item)=>{
           return(
-                  <PureCanvas coords={item} key={item.key} />
+                  <PureCanvas coords={item} key={item.key} type={this.props.type}/>
               
           );
       });
