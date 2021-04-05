@@ -21,7 +21,7 @@ const win = Dimensions.get('window');
 var plankStyle = StyleSheet.create({
     plank:{
         flex:1,
-        width: vw(80),
+        width: vw(90),
         height: win.height/2,
         position:'absolute',
         resizeMode:'contain',  

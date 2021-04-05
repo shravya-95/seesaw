@@ -1,5 +1,5 @@
 import React, {Component, useEffect, useRef} from 'react';
-import { StyleSheet, Text, View, Image, Dimensions, PanResponder, Animated } from 'react-native';
+import { StyleSheet, Text, View, Image, Dimensions, PanResponder, Animated, TouchableWithoutFeedbackComponent } from 'react-native';
 import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
 import PureCanvas from './PureCanvas'
 export default class Ball extends React.Component {
@@ -7,7 +7,7 @@ export default class Ball extends React.Component {
       super(props);
       this.saveContext = this.saveContext.bind(this);
       var props = this.props;
-      var radius = vw(2),
+      var radius = vw(2.5),
           direction = props.direction,                         // ball radius
           deg = -60 / 180 * Math.PI,          // direction of row start -60°
           plankDeg =   -(direction-65) / 180 * Math.PI,
@@ -30,8 +30,8 @@ export default class Ball extends React.Component {
       this.itemProps=[]
 
       if (props.type == "finished"){
-        x=vw(60)
-        cx=vw(60)
+        x=vw(64)
+        cx=vw(64)
       }
       if (props.type=="captured"){
         x=vw(100)/3 + radius +3
@@ -43,7 +43,7 @@ export default class Ball extends React.Component {
           var itemProp = {
               itemCx:cx,
               itemCy:cy,
-              key:i.toString()
+              id:this.props.type+"-"+i
           }
           // drawBall(cx, cy);      
                         // draw ball
@@ -54,7 +54,6 @@ export default class Ball extends React.Component {
           drawn++;                              // increase balls on row count
           
           if (drawn === rowLen) { 
-              console.log("new row")
               drawn = 0;
               cx = x + v.x * rowLen; 
               cy = y + v.y * rowLen;                               
@@ -74,7 +73,7 @@ export default class Ball extends React.Component {
   renderBalls(){
       return this.itemProps.map((item)=>{
           return(
-                  <PureCanvas coords={item} key={item.key} type={this.props.type}/>
+                  <PureCanvas coords={item} key={item.id} type={this.props.type} focusSectionProp={this.props.focusSectionProp} focusBall = {this.props.focusBall} navigation={this.props.navigation}/>
               
           );
       });

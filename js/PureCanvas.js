@@ -1,23 +1,23 @@
 import React, {Component, useEffect, useRef} from 'react';
 import { StyleSheet, Text, View, Image, Dimensions, PanResponder, Animated, TouchableHighlight } from 'react-native';
 import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
+import { createStackNavigator } from '@react-navigation/stack';
 
 export default class PureCanvas extends React.Component {
 
     constructor(props){
         super(props);
         this.props=props;
-        // console.log(this.props.coords)
+        // console.log(this.props)
         this.state = {
             pan: new Animated.ValueXY(),
             currPanel:props.currPanel,
-            selected:false
+            selected:this.props.focusBall==this.props.coords.id,
           };
       
         this.styles = StyleSheet.create({
             circle: {
-                height: vw(2),
-                width: vw(2),
+                
                 top:this.props.coords.itemCy,
                 left:this.props.coords.itemCx,
                 position:"absolute",
@@ -32,6 +32,7 @@ export default class PureCanvas extends React.Component {
                 backgroundColor:'white',
             }
             });
+            const TAB_BAR_HEIGHT = 49;
             if (props.type=="tagged"){
                 this.currPanel=1;
                 this.bgColor="None"
@@ -49,7 +50,6 @@ export default class PureCanvas extends React.Component {
             }
     // Add a listener for the delta value change
     this._val = { x:0, y:0 }
-    console.log('mounted');
     this.state.pan.addListener((value) => this._val = value);
     // Initialize PanResponder with move handling
     this.panResponder = PanResponder.create({
@@ -65,14 +65,12 @@ export default class PureCanvas extends React.Component {
         // this.state.pan.setValue({ x:0, y:0})
       },
       onPanResponderMove: (e,gesture)=>{
-        console.log('moving');
         this.state.pan.setValue({x:gesture.dx,y:gesture.dy})
         // return Animated.event([
         // null, { dx: this.state.pan.x, dy: this.state.pan.y }
     //   ])
     },
       onPanResponderRelease        : (e, gesture) => {
-          console.log(this.state.pan.x._value+" "+vw(33)+" "+gesture.moveX)
         //   this.state.pan.extractOffset();
           
           
@@ -84,6 +82,9 @@ export default class PureCanvas extends React.Component {
                         friction: 5
                       }).start();
                 }
+                else{
+                  this.props.navigation.navigate("Steps")
+                }
 
             }
             else if (gesture.moveX>vw(33) && gesture.moveX<vw(66)){
@@ -94,17 +95,43 @@ export default class PureCanvas extends React.Component {
                     friction: 5
                   }).start();
                 }
+                else{
+                  this.props.navigation.navigate("Steps")
+                }
           }
           else if(gesture.moveX>vw(66)){
               console.log("Entered 3rd panel")
+              if (this.currPanel==3){
+                Animated.spring(this.state.pan, {
+                    toValue: { x: 0, y: 0 },
+                    friction: 5
+                  }).start();
+                }
+                else{
+                  this.props.navigation.navigate("Steps")
+                }
           }
       }
       // adjusting delta value
     //   this.state.pan.setValue({ x:0, y:0})
     });
     this.customStyle = function(){
+      
+      if (this.state.selected==true){
+        console.log("SELECTED")
+        return({
+          width:vw(9),
+          height:vw(9),
+          backgroundColor: this.bgColor, 
+          borderColor: this.borderColor,
+        }
+        )
+        
+      }
         return(
             {
+              height: vw(3),
+                width: vw(3),
                 backgroundColor: this.bgColor, 
                 borderColor: this.borderColor,
              })
@@ -118,21 +145,26 @@ export default class PureCanvas extends React.Component {
 
     
 
+    
+
     //should return a view with the circle at a given coordinate
   
     render() {
+      {console.log("re-render")}
+      this.customStyle=this.customStyle.bind(this)
     const panStyle = {
         transform: this.state.pan.getTranslateTransform(),
         zindex: 4
       }
       return (
         <TouchableHighlight onPress={() => {
-            this.state.selected=true;
+            this.setState({selected:true})
             console.log(this.state.selected)
+            this.props.focusSectionProp(this.props.type,this.props.coords.id);
           }} underlayColor="white">
         <Animated.View
         {...this.panResponder.panHandlers}
-        style={[panStyle,this.styles.circle, this.customStyle(),this.state.selected && this.styles.circleSelected]}
+        style={[this.customStyle(),panStyle,this.styles.circle]}
         
       />
       </TouchableHighlight>
