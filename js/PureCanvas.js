@@ -2,6 +2,7 @@ import React, {Component, useEffect, useRef} from 'react';
 import { StyleSheet, Text, View, Image, Dimensions, PanResponder, Animated, TouchableHighlight } from 'react-native';
 import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
 import { createStackNavigator } from '@react-navigation/stack';
+import CapturedFlag from './CapturedFlag'
 
 export default class PureCanvas extends React.Component {
 
@@ -13,8 +14,9 @@ export default class PureCanvas extends React.Component {
             pan: new Animated.ValueXY(),
             currPanel:props.currPanel,
             selected:this.props.focusBall==this.props.coords.id,
+            section:null
           };
-      
+          
         this.styles = StyleSheet.create({
             circle: {
                 
@@ -33,21 +35,29 @@ export default class PureCanvas extends React.Component {
             }
             });
             const TAB_BAR_HEIGHT = 49;
+            var section = 0;
             if (props.type=="tagged"){
                 this.currPanel=1;
                 this.bgColor="None"
                 this.borderColor="#E1370E"
+                this.state.section=1
             }
             else if (props.type=="captured"){
                 this.currPanel=2
                 this.bgColor="#F1CC34"
                 this.borderColor="#F1CC34"
+                this.state.section=2
             }
             else if (props.type=="finished"){
                 this.currPanel=3
                 this.bgColor="#33B807"
                 this.borderColor="#33B807"
+                this.state.section=3
             }
+            // this.setState({section:section},()=>{
+            //   console.log(this.state.section, 'section updated')
+            // })
+            this.captured = this.props.type=='captured'
     // Add a listener for the delta value change
     this._val = { x:0, y:0 }
     this.state.pan.addListener((value) => this._val = value);
@@ -66,6 +76,7 @@ export default class PureCanvas extends React.Component {
       },
       onPanResponderMove: (e,gesture)=>{
         this.state.pan.setValue({x:gesture.dx,y:gesture.dy})
+        this.props.focusBall(this.props.coords.id)
         // return Animated.event([
         // null, { dx: this.state.pan.x, dy: this.state.pan.y }
     //   ])
@@ -83,38 +94,50 @@ export default class PureCanvas extends React.Component {
                       }).start();
                 }
                 else{
-                  this.props.navigation.navigate("Steps")
+                  // this.props.navigation.navigate("Steps")
                 }
 
             }
             else if (gesture.moveX>vw(33) && gesture.moveX<vw(66)){
                 console.log("Entered 2nd panel");
-                if (this.currPanel>=2){
+                if (this.props.type=='captured' || this.props.type=='finished'){
                 Animated.spring(this.state.pan, {
                     toValue: { x: 0, y: 0 },
                     friction: 5
                   }).start();
                 }
                 else{
-                  this.props.navigation.navigate("Steps")
+                  section=2
+                  
+                  this.props.focusBallSection(2, this.props.coords.id)
+                  // this.props.navigation.navigate("Steps")
                 }
           }
           else if(gesture.moveX>vw(66)){
               console.log("Entered 3rd panel")
-              if (this.currPanel==3){
+              if (this.props.type=='finished' || this.props.type=='tagged'){
                 Animated.spring(this.state.pan, {
                     toValue: { x: 0, y: 0 },
                     friction: 5
                   }).start();
                 }
                 else{
-                  this.props.navigation.navigate("Steps")
+                  section=3
+                  
+                  this.props.focusBallSection(3,this.props.coords.id)
+                  // this.props.navigation.navigate("Steps")
                 }
           }
+          // this.setState({section:section},()=>{
+          //   console.log(this.state.section, 'section updated')
+          // })
+          
+          this.props.focusSectionProp(section,this.props.coords.id);
       }
       // adjusting delta value
     //   this.state.pan.setValue({ x:0, y:0})
     });
+    
     this.customStyle = function(){
       
       if (this.state.selected==true){
@@ -157,16 +180,22 @@ export default class PureCanvas extends React.Component {
         zindex: 4
       }
       return (
+        
         <TouchableHighlight onPress={() => {
             this.setState({selected:true})
-            console.log(this.state.selected)
-            this.props.focusSectionProp(this.props.type,this.props.coords.id);
+            console.log(this.state.section)
+            this.props.focusSectionProp(this.state.section,this.props.coords.id);
           }} underlayColor="white">
-        <Animated.View
-        {...this.panResponder.panHandlers}
-        style={[this.customStyle(),panStyle,this.styles.circle]}
         
-      />
+        <Animated.View
+        {...this.panResponder.panHandlers} style={panStyle}>
+          {this.captured?<CapturedFlag 
+        {...this.panResponder.panHandlers}
+        color={this.bgColor} coords={this.props.coords} borderColor={this.borderColor} style={panStyle}/>:
+        <View style={[this.customStyle(),this.styles.circle]}/>}
+        </Animated.View>
+    
+        
       </TouchableHighlight>
      
 

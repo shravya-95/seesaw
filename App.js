@@ -1,17 +1,25 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
 import Plank from './js/Plank';
 import Weight from './js/Weight'
+import CapturedFlag from './js/CapturedFlag'
 import Ball from './js/Ball'
 import Steps from './js/Steps'
 import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
 import BottomDrawer from 'react-native-three-step-bottom-drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import BottomButton from './js/BottomButton'
 
+/**
+ * TODO:
+ * 1. Selected ball - highlight
+ * 2. Drawer screen - tag info
+ * 3. Drawer screen - fix tag
+ * 4. AR screen add new tag
+ */
 
-import PlankSvg from './js/PlankSvg'
 
 const Stack = createStackNavigator();
 export default function App(){
@@ -29,11 +37,6 @@ export default function App(){
 }
 
 function SeeSaw({navigation}){
-  //TODO: if ball in left section - show alert
-  //TODO: if ball next section - You still need to finish some steps dialogue
-    //TODO: 
-  //TODO: if ball in prev section or same section - spring back
-  //TODO: make it look like design
   //TODO: character?
   //TODO: tap - show detail
   const [plankLayout, setPlankLayout] = useState(null);
@@ -43,13 +46,17 @@ function SeeSaw({navigation}){
   const [secOneBorderColor, setSecOneBorderColor]=useState("rgba(225, 55, 14, 0.3)");
   const [secTwoBorderColor, setSecTwoBorderColor]=useState("rgba(241, 204, 52, 0.3)");
   const [secThreeBorderColor, setSecThreeBorderColor]=useState("rgba(51, 184, 7, 0.3)");
-  const [selectedBall, setSelectedBall]=useState(null);
+  const [selectedBall, setSelectedBall]=useState("");
+  const [selectedBallSection, setSelectedBallSection]=useState(0)
   const [bottomDrawerVisible, setBottomDrawerVisible]=useState(false);
   const [bottomDrawerColor, setBottomDrawerColor]=useState("None");
+
   function focusSection(focus,ballKey){
     setSelectedBall(ballKey);
+    // focus = selectedBallSection
     
-    if (focus=="tagged"){
+    if (focus==1){
+      setSelectedBallSection(1)
       setSecOneBgColor("rgba(225, 55, 14, 0.3)")
       setSecOneBorderColor("rgb(225, 55, 14)")
       setBottomDrawerVisible(true)
@@ -59,7 +66,9 @@ function SeeSaw({navigation}){
       setSecThreeBgColor("None")
       setSecThreeBorderColor("rgba(51, 184, 7, 0.3camer)")
     }
-    if (focus=="captured"){
+    if (focus==2){
+      setSelectedBallSection(2)
+
       setSecOneBgColor("None")
       setSecOneBorderColor("rgba(225, 55, 14, 0.3)")
       setSecTwoBgColor("rgba(241, 204, 52, 0.3)")
@@ -70,48 +79,107 @@ function SeeSaw({navigation}){
       setSecThreeBorderColor()
 
     }
-    if (focus=="finished"){
+    if (focus==3){
+      setSelectedBallSection(3)
       setSecOneBgColor("None")
       setSecOneBorderColor("rgba(225, 55, 14, 0.3)")
 
       setSecTwoBgColor("None")
-      setSecTwoBgColor("rgba(241, 204, 52, 0.3)")
+      setSecTwoBorderColor("rgba(241, 204, 52, 0.3)")
 
       setSecThreeBgColor("rgba(51, 184, 7, 0.3)")
       setSecThreeBorderColor("rgba(51, 184, 7, 1.0)")
-      setBottomDrawerVisible(false)
+      setBottomDrawerVisible(true)
+      setBottomDrawerColor("rgba(51, 184, 7, 1.0)")
 
     }
+    var drawerText=""
+  if (selectedBall.startsWith('tagged')){
+    if (selectedBallSection==2)
+      drawerText="Fix this flag!"
+    if (selectedBallSection==1)
+      drawerText="Flag information"
+
+  }
+  if (selectedBall.startsWith('captured')){
+    if (selectedBallSection==2)
+      drawerText="Flag information"
+    if (selectedBallSection==3)
+      drawerText="Finish this flag!"
+  }
+  if (selectedBall.startsWith('finished')){
+    if (selectedBallSection==3)
+      drawerText="Flag information"
+  }
   
   }
   var tagged = 1;
   var finished = 10;
   var capture=5;
 
+  var drawerText=""
+  if (selectedBall.startsWith('tagged')){
+    if (selectedBallSection==2)
+      drawerText="Fix this flag!"
+    if (selectedBallSection==1)
+      drawerText="Flag information"
+
+  }
+  if (selectedBall.startsWith('captured')){
+    if (selectedBallSection==2)
+      drawerText="Flag information"
+    if (selectedBallSection==3)
+      drawerText="Finish this flag!"
+  }
+  if (selectedBall.startsWith('finished')){
+    if (selectedBallSection==3)
+      drawerText="Flag information"
+  }
+
+
+
   return (
     <View style={{overflow:'hidden'}}>
-      
+    
     <View style={[styles.container,{flexDirection: "row"}]}>
-      <View style={{ flex: 1,  height:vh(100),borderTopWidth:10, borderTopColor:secOneBorderColor, borderRightColor: 'gray', borderRightWidth:2, backgroundColor:secOneBgColor}} />
-      <View style={{ flex: 1,  height:vh(100), borderTopWidth:10, borderTopColor:secTwoBorderColor, borderRightColor: 'gray', borderRightWidth:2,backgroundColor:secTwoBgColor }} />
-      <View style={{ flex: 1, height:vh(100), borderTopWidth:10, borderTopColor:secThreeBorderColor,backgroundColor:secThreeBgColor }} />
+      <View style={{ flex: 1,  height:vh(100),borderTopWidth:10, borderTopColor:secOneBorderColor, borderRightColor: 'gray', borderRightWidth:2, backgroundColor:secOneBgColor}} >
+        <Text style={{top:vh(2), color:'white', textAlign:'center'}}>Flagged</Text>
+      </View>
+      <View style={{ flex: 1,  height:vh(100), borderTopWidth:10, borderTopColor:secTwoBorderColor, borderRightColor: 'gray', borderRightWidth:2,backgroundColor:secTwoBgColor }} >
+      <Text style={{top:vh(2), color:'white', textAlign:'center'}}>Fixed</Text>
+      </View>
+      <View style={{ flex: 1, height:vh(100), borderTopWidth:10, borderTopColor:secThreeBorderColor,backgroundColor:secThreeBgColor }} >
+        <Text style={{top:vh(2), color:'white', textAlign:'center'}}>Finished</Text></View>
       </View>
       
       <View style={[styles.plank, {transform:[{rotate:torque(tagged,finished)+'deg'}]}]}>
-      <Ball direction={torque(tagged,finished)} count={tagged} type="tagged" focusSectionProp={focusSection} focusBall={setSelectedBall} navigation={navigation}/>
-      <Ball direction={torque(tagged,finished)} count={capture} type="captured" focusSectionProp={focusSection} focusBall={setSelectedBall} navigation={navigation}/>
-      <Ball direction={torque(tagged,finished)} count={finished} type="finished" focusSectionProp={focusSection} focusBall={setSelectedBall}/>
+      <Ball direction={torque(tagged,finished)} count={tagged} type="tagged" focusSectionProp={focusSection} focusBall={setSelectedBall} focusBallSection={setSelectedBallSection} navigation={navigation}/>
+      <Ball direction={torque(tagged,finished)} count={capture} type="captured" focusSectionProp={focusSection} focusBall={setSelectedBall} focusBallSection={setSelectedBallSection} navigation={navigation}/>
+      <Ball direction={torque(tagged,finished)} count={finished} type="finished" focusSectionProp={focusSection} focusBall={setSelectedBall} focusBallSection={setSelectedBallSection}/>
 
       <Plank/>
       </View>
       {bottomDrawerVisible?<BottomDrawer
-      containerHeight={vh(10)}
+      containerHeight={vh(80)}
+      
+      startUp={false}
+      downDisplay={vh(70)}
       backgroundColor={bottomDrawerColor}
+     
       roundedEdges={true}
       style={[{width:vw(10)},{borderTopRightRadius:30}]}>
+        <View>
         <Text
         style={{textAlign:'center', fontWeight:'bold'}}
-        >Fix this flag!</Text>
+        >{drawerText}</Text>
+        
+        <ScrollView>
+       
+          <View style={{height:200, zIndex:1}}><Text>Hello I am an item!</Text></View>
+        
+        </ScrollView>
+        </View>
+      
       
       </BottomDrawer>:null}     
      </View>
