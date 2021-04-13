@@ -54,6 +54,10 @@ export default class PureCanvas extends React.Component {
                 this.borderColor="#33B807"
                 this.state.section=3
             }
+            else if (props.type=="untagged"){
+              this.bgColor='pink'
+              this.state.section=3
+            }
             // this.setState({section:section},()=>{
             //   console.log(this.state.section, 'section updated')
             // })

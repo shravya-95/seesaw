@@ -37,6 +37,12 @@ export default class Ball extends React.Component {
         x=vw(100)/3 + radius +3
         cx=vw(100)/3 + radius + 3
       }
+      if (props.type=="untagged"){
+        x=10,
+        cx=10
+        y=vh(100)-50
+        cy=vh(100)-50
+      }
       
 
       for(i = 0; i <  balls; i++) {
