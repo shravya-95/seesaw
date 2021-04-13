@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity, ScrollView, Image } from 'react-native';
+import {Button} from 'react-native-elements';
 import Plank from './js/Plank';
 import Weight from './js/Weight'
 import CapturedFlag from './js/CapturedFlag'
@@ -11,7 +12,8 @@ import BottomDrawer from 'react-native-three-step-bottom-drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import BottomButton from './js/BottomButton'
-
+import Modal from 'react-native-modalbox';
+import {Camera, Permissions} from 'expo';
 /**
  * TODO:
  * 1. Selected ball - highlight
@@ -31,7 +33,9 @@ export default function App(){
       }}>
         <Stack.Screen name="SeeSaw" component={SeeSaw} />
         <Stack.Screen name="Steps" component={Steps}/>
+        <Stack.Screen name="Camera" component={CameraView}/>
       </Stack.Navigator>
+      
     </NavigationContainer>
   )
 }
@@ -49,7 +53,9 @@ function SeeSaw({navigation}){
   const [selectedBall, setSelectedBall]=useState("");
   const [selectedBallSection, setSelectedBallSection]=useState(0)
   const [bottomDrawerVisible, setBottomDrawerVisible]=useState(false);
+  const [isOpen, setIsOpen]=useState(false);
   const [bottomDrawerColor, setBottomDrawerColor]=useState("None");
+  const modalRef = React.useRef();
 
   function focusSection(focus,ballKey){
     setSelectedBall(ballKey);
@@ -64,7 +70,7 @@ function SeeSaw({navigation}){
       setSecTwoBgColor("None")
       setSecTwoBorderColor("rgba(241, 204, 52, 0.3)")
       setSecThreeBgColor("None")
-      setSecThreeBorderColor("rgba(51, 184, 7, 0.3camer)")
+      setSecThreeBorderColor("rgba(51, 184, 7, 0.3)")
     }
     if (focus==2){
       setSelectedBallSection(2)
@@ -76,7 +82,7 @@ function SeeSaw({navigation}){
       setBottomDrawerVisible(true)
       setBottomDrawerColor("rgb(241, 204, 52)")
       setSecThreeBgColor("None")
-      setSecThreeBorderColor()
+      setSecThreeBorderColor("rgba(51, 184, 7, 0.3)")
 
     }
     if (focus==3){
@@ -117,71 +123,82 @@ function SeeSaw({navigation}){
   var finished = 10;
   var capture=5;
 
-  var drawerText=""
+  var drawerText={}
   if (selectedBall.startsWith('tagged')){
     if (selectedBallSection==2)
-      drawerText="Fix this flag!"
+      drawerText.title="Fix this flag!"
+      drawerText.header="FLAGGED"
     if (selectedBallSection==1)
-      drawerText="Flag information"
+    drawerText.title="Flag information"
 
   }
   if (selectedBall.startsWith('captured')){
     if (selectedBallSection==2)
-      drawerText="Flag information"
+    drawerText.title="Flag information"
+    drawerText.header="FIXED"
     if (selectedBallSection==3)
-      drawerText="Finish this flag!"
+    drawerText.title="Finish this flag!"
   }
   if (selectedBall.startsWith('finished')){
     if (selectedBallSection==3)
-      drawerText="Flag information"
+    drawerText.title="Flag information"
+    drawerText.header="FINISHED"
+  }
+  var BContent = (
+    <View style={[styles.btnModal,{zIndex:1}]}>
+      <Button containerStyle={styles.addFlagWrapper} buttonStyle={styles.addFlagBtn} titleStyle={{color:'black', fontWeight:'bold'}}  title="X" color="black" onPress={() => setIsOpen(false)}/>
+    </View>
+  );
+  var itemArr=[]
+  for (var i=0;i<10;i++){
+    itemArr.push(
+      <View style={{flex:1, flexDirection:'row', marginStart:30}}>
+      <Image source={require('./js/res/sampleImage.png')} style={{width:50, resizeMode:'contain', marginRight:20}}></Image>
+      <Text style={{flex:1, marginTop:30, marginStart:30, fontWeight:'bold'}} key={i}>Some sample text</Text>
+      </View>
+    );
+
   }
 
-
-
   return (
-    <View style={{overflow:'hidden'}}>
+    <View style={{overflow:'hidden', flex:1, backgroundColor:'black'}} >
     
-    <View style={[styles.container,{flexDirection: "row"}]}>
-      <View style={{ flex: 1,  height:vh(100),borderTopWidth:10, borderTopColor:secOneBorderColor, borderRightColor: 'gray', borderRightWidth:2, backgroundColor:secOneBgColor}} >
-        <Text style={{top:vh(2), color:'white', textAlign:'center'}}>Flagged</Text>
-      </View>
-      <View style={{ flex: 1,  height:vh(100), borderTopWidth:10, borderTopColor:secTwoBorderColor, borderRightColor: 'gray', borderRightWidth:2,backgroundColor:secTwoBgColor }} >
-      <Text style={{top:vh(2), color:'white', textAlign:'center'}}>Fixed</Text>
-      </View>
-      <View style={{ flex: 1, height:vh(100), borderTopWidth:10, borderTopColor:secThreeBorderColor,backgroundColor:secThreeBgColor }} >
-        <Text style={{top:vh(2), color:'white', textAlign:'center'}}>Finished</Text></View>
-      </View>
-      
-      <View style={[styles.plank, {transform:[{rotate:torque(tagged,finished)+'deg'}]}]}>
-      <Ball direction={torque(tagged,finished)} count={tagged} type="tagged" focusSectionProp={focusSection} focusBall={setSelectedBall} focusBallSection={setSelectedBallSection} navigation={navigation}/>
-      <Ball direction={torque(tagged,finished)} count={capture} type="captured" focusSectionProp={focusSection} focusBall={setSelectedBall} focusBallSection={setSelectedBallSection} navigation={navigation}/>
-      <Ball direction={torque(tagged,finished)} count={finished} type="finished" focusSectionProp={focusSection} focusBall={setSelectedBall} focusBallSection={setSelectedBallSection}/>
-
-      <Plank/>
-      </View>
-      {bottomDrawerVisible?<BottomDrawer
-      containerHeight={vh(80)}
-      
-      startUp={false}
-      downDisplay={vh(70)}
-      backgroundColor={bottomDrawerColor}
-     
-      roundedEdges={true}
-      style={[{width:vw(10)},{borderTopRightRadius:30}]}>
-        <View>
-        <Text
-        style={{textAlign:'center', fontWeight:'bold'}}
-        >{drawerText}</Text>
-        
-        <ScrollView>
-       
-          <View style={{height:200, zIndex:1}}><Text>Hello I am an item!</Text></View>
-        
-        </ScrollView>
+    <View style={[styles.container,{flexDirection: "row", flex:9}]}>
+        <View style={{ flex: 1, height:'100%' , borderTopWidth:10, borderTopColor:secOneBorderColor, borderRightColor: 'gray', borderRightWidth:2, backgroundColor:secOneBgColor}} >
+          <Text style={{top:vh(2), color:'white', textAlign:'center'}}>Flagged</Text>
+        </View>
+        <View style={{ flex: 1,  height:'100%', borderTopWidth:10, borderTopColor:secTwoBorderColor, borderRightColor: 'gray', borderRightWidth:2,backgroundColor:secTwoBgColor }} >
+          <Text style={{top:vh(2), color:'white', textAlign:'center'}}>Fixed</Text>
+        </View>
+        <View style={{ flex: 1, height:'100%', borderTopWidth:10, borderTopColor:secThreeBorderColor,backgroundColor:secThreeBgColor }} >
+          <Text style={{top:vh(2), color:'white', textAlign:'center'}}>Finished</Text></View>
         </View>
       
-      
-      </BottomDrawer>:null}     
+        <View style={[styles.plank, {transform:[{rotate:torque(tagged,finished)+'deg'}]}]}>
+        <Ball direction={torque(tagged,finished)} count={tagged} type="tagged" focusSectionProp={focusSection} focusBall={setSelectedBall} focusBallSection={setSelectedBallSection} navigation={navigation}/>
+        <Ball direction={torque(tagged,finished)} count={capture} type="captured" focusSectionProp={focusSection} focusBall={setSelectedBall} focusBallSection={setSelectedBallSection} navigation={navigation}/>
+        <Ball direction={torque(tagged,finished)} count={finished} type="finished" focusSectionProp={focusSection} focusBall={setSelectedBall} focusBallSection={setSelectedBallSection}/>
+
+        <Plank/>
+        
+
+      </View>
+      <Button containerStyle={styles.addFlagWrapper} buttonStyle={styles.addFlagBtn} titleStyle={{color:'black', fontWeight:'bold'}} title="+" onPress={()=>navigation.navigate('Camera')}/>
+      {bottomDrawerVisible?<BottomButton
+      text={drawerText.title} backgroundColor={bottomDrawerColor} modalRef={modalRef}>      
+      </BottomButton>:null}  
+      <Modal style={styles.modal} position={"bottom"} ref={modalRef} isOpen={isOpen} onClosed={() => setIsOpen(false)} backdropPressToClose={true} backdrop={true} backdropContent={BContent} backdropOpacity={0.5}>
+          <ScrollView style={{width:'100%'}}>
+          
+          <Image
+          source={require('./js/res/sampleImage.png')}
+          style={styles.imageStyle}
+          ></Image>
+          <Text h3 style={[styles.modalHeader, {color:bottomDrawerColor}]}>{drawerText.header}</Text>
+          {itemArr}
+          </ScrollView>
+      </Modal>
+
      </View>
   );
   
@@ -201,7 +218,68 @@ const styles = StyleSheet.create({
     position:'absolute',
     top:vh(40),
     left:vw(7),
-     }
+     },
+  modal: {
+  justifyContent: 'center',
+  alignItems: 'center',
+  flex:0.8,
+  borderTopLeftRadius:50,
+  borderTopRightRadius:50,
+  zIndex:3
+  
+  },
+  btnModal: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    width: 50,
+    height: 50,
+    backgroundColor: "transparent"
+    },
+  modalHeader:{
+    fontWeight:'bold',
+    fontSize:'10',
+    marginStart: 50,
+    marginTop:30
+
+  }
+  ,
+  imageStyle:{
+    marginTop:30,
+    width:'100%',
+    height:vh(50),
+    flex:1,
+    resizeMode:'contain',
+    borderTopRightRadius:50,
+    borderTopLeftRadius:50
+  },
+  addFlagWrapper:{
+    borderRadius:50,
+    position:'absolute',
+    backgroundColor:'white',
+    bottom:20,
+    left:20,
+    width:vw(4),
+    height:vw(4),
+    zIndex:2,
+    flex:1,
+    justifyContent:'center'
+  },
+  addFlagBtn:{
+    backgroundColor:'white',
+    width:'100%',
+    height:'100%',
+  },
+  capture: {
+    flex: 0,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    padding: 15,
+    paddingHorizontal: 20,
+    alignSelf: 'center',
+    margin: 20
+}
+
 });
 
 const torque = function(tagged,finished){
@@ -214,3 +292,54 @@ const torque = function(tagged,finished){
   return (netWeight/20)*15;
 }
 
+class CameraView extends React.Component {
+  state = {
+    hasCameraPermission: null,
+    type: Camera.Constants.Type.back,
+  };
+
+  async componentWillMount() {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    this.setState({ hasCameraPermission: status === 'granted' });
+  }
+  render() {
+     const { hasCameraPermission } = this.state;
+    if (hasCameraPermission === null) {
+      return <View />;
+    } else if (hasCameraPermission === false) {
+      return <Text>No access to camera</Text>;
+    } else {
+      return (
+        <View style={{ flex: 1 }}>
+          <Camera style={{ flex: 1 }} type={this.state.type}>
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: 'transparent',
+                flexDirection: 'row',
+              }}>
+              <TouchableOpacity
+                style={{
+                  flex: 0.1,
+                  alignSelf: 'flex-end',
+                  alignItems: 'center',
+                }}
+                onPress={() => {
+                  this.setState({
+                    type: this.state.type === Camera.Constants.Type.back
+                      ? Camera.Constants.Type.front
+                      : Camera.Constants.Type.back,
+                  });
+                }}>
+                <Text
+                  style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
+                  {' '}Flip{' '}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </Camera>
+        </View>
+      );
+    }
+  }
+}
