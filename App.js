@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Dimensions, TouchableOpacity, ScrollView, Image } from 'react-native';
-import {Button} from 'react-native-elements';
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity, ScrollView, Image,findNodeHandle } from 'react-native';
+import {Button, Tooltip} from 'react-native-elements';
 import Plank from './js/Plank';
 import Weight from './js/Weight'
 import CapturedFlag from './js/CapturedFlag'
@@ -56,6 +56,7 @@ function SeeSaw({navigation}){
   const [isOpen, setIsOpen]=useState(false);
   const [bottomDrawerColor, setBottomDrawerColor]=useState("None");
   const modalRef = React.useRef();
+  var selectedElementRef = React.useRef();
 
   function focusSection(focus,ballKey){
     setSelectedBall(ballKey);
@@ -146,22 +147,36 @@ function SeeSaw({navigation}){
   }
   var BContent = (
     <View style={[styles.btnModal,{zIndex:1}]}>
-      <Button containerStyle={styles.addFlagWrapper} buttonStyle={styles.addFlagBtn} titleStyle={{color:'black', fontWeight:'bold'}}  title="X" color="black" onPress={() => setIsOpen(false)}/>
+      <Button containerStyle={styles.addFlagWrapper} buttonStyle={styles.addFlagBtn} titleStyle={{color:'black', fontWeight:'600'}}  title="X" color="black" onPress={() => setIsOpen(false)}/>
     </View>
   );
   var itemArr=[]
   for (var i=0;i<10;i++){
     itemArr.push(
-      <View style={{flex:1, flexDirection:'row', marginStart:30}}>
+      <View style={{flex:1, flexDirection:'row', marginStart:30}} key={i.toString()}>
       <Image source={require('./js/res/sampleImage.png')} style={{width:50, resizeMode:'contain', marginRight:20}}></Image>
-      <Text style={{flex:1, marginTop:30, marginStart:30, fontWeight:'bold'}} key={i}>Some sample text</Text>
+      <Text style={{flex:1, marginTop:30, marginStart:30, fontWeight:'600'}} key={i}>Some sample text</Text>
       </View>
     );
 
   }
+  var setSelectRef=(ref)=>{
+    selectedElementRef=ref
+  }
 
   return (
-    <View style={{overflow:'hidden', flex:1, backgroundColor:'black'}} >
+    <View style={{overflow:'hidden', flex:1, backgroundColor:'black'}} 
+    onStartShouldSetResponder={evt => {
+      evt.persist();
+      let elementHandle = findNodeHandle(selectedElementRef);
+        if (elementHandle == evt.target) {
+          return;
+        }
+        setSelectRef(evt.target);
+        console.log(evt.target);
+      
+    }}
+    >
     
     <View style={[styles.container,{flexDirection: "row", flex:9}]}>
         <View style={{ flex: 1, height:'100%' , borderTopWidth:10, borderTopColor:secOneBorderColor, borderRightColor: 'gray', borderRightWidth:2, backgroundColor:secOneBgColor}} >
@@ -175,23 +190,50 @@ function SeeSaw({navigation}){
         </View>
       
         <View style={[styles.plank, {transform:[{rotate:torque(tagged,finished)+'deg'}]}]}>
-        <Ball direction={torque(tagged,finished)} count={tagged} type="tagged" focusSectionProp={focusSection} focusBall={setSelectedBall} focusBallSection={setSelectedBallSection} navigation={navigation}/>
-        <Ball direction={torque(tagged,finished)} count={capture} type="captured" focusSectionProp={focusSection} focusBall={setSelectedBall} focusBallSection={setSelectedBallSection} navigation={navigation}/>
-        <Ball direction={torque(tagged,finished)} count={finished} type="finished" focusSectionProp={focusSection} focusBall={setSelectedBall} focusBallSection={setSelectedBallSection}/>
+        <Tooltip
+      withOverlay={true}
+      popover={<Text>I am here</Text>}
+     
+      backgroundColor="white"
+      ModalComponent={Modal}>
+        <Ball direction={torque(tagged,finished)} 
+        count={tagged} type="tagged" 
+        focusSectionProp={focusSection} 
+        focusBall={setSelectedBall} 
+        focusBallSection={setSelectedBallSection} 
+        navigation={navigation}
+        setSelectRef = {setSelectRef}
+        selectedElementRef={selectedElementRef}
+        />
 
+        <Ball direction={torque(tagged,finished)} 
+        count={capture} type="captured" 
+        focusSectionProp={focusSection} 
+        focusBall={setSelectedBall} 
+        focusBallSection={setSelectedBallSection} 
+        navigation={navigation}
+        setSelectRef = {setSelectRef}
+        selectedElementRef={selectedElementRef}/>
+
+        <Ball direction={torque(tagged,finished)} 
+        count={finished} type="finished" 
+        focusSectionProp={focusSection} 
+        focusBall={setSelectedBall} 
+        focusBallSection={setSelectedBallSection}
+        setSelectRef = {setSelectRef}
+        selectedElementRef={selectedElementRef}/>
+        </Tooltip>
         <Plank/>
         
 
       </View>
-      <Ball direction={torque(tagged,finished)} count={10} type="untagged" focusSectionProp={focusSection} focusBall={setSelectedBall} focusBallSection={setSelectedBallSection}/>
 
-      <Button containerStyle={styles.addFlagWrapper} buttonStyle={styles.addFlagBtn} titleStyle={{color:'black', fontWeight:'bold'}} title="+" onPress={()=>navigation.navigate('Camera')}/>
+      <Button containerStyle={styles.addFlagWrapper} buttonStyle={styles.addFlagBtn} titleStyle={{color:'black', fontWeight:'600'}} title="+" onPress={()=>navigation.navigate('Camera')}/>
       {bottomDrawerVisible?<BottomButton
       text={drawerText.title} backgroundColor={bottomDrawerColor} modalRef={modalRef}>      
       </BottomButton>:null}  
       <Modal style={styles.modal} position={"bottom"} ref={modalRef} isOpen={isOpen} onClosed={() => setIsOpen(false)} backdropPressToClose={true} backdrop={true} backdropContent={BContent} backdropOpacity={0.5}>
           <ScrollView style={{width:'100%'}}>
-          
           <Image
           source={require('./js/res/sampleImage.png')}
           style={styles.imageStyle}
@@ -239,8 +281,8 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent"
     },
   modalHeader:{
-    fontWeight:'bold',
-    fontSize:'10',
+    fontWeight:'600',
+    fontSize:10,
     marginStart: 50,
     marginTop:30
 

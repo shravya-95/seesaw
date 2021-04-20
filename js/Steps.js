@@ -13,7 +13,7 @@ export default class Steps extends React.Component {
           onPress={() => this.props.navigation.goBack()}
         />
                 <Text
-                style={{color:"white", textAlign:"center", fontWeight:"bold"}}
+                style={{color:"white", textAlign:"center", fontWeight:'600'}}
                 >
                     Some steps to fix...</Text>
                 

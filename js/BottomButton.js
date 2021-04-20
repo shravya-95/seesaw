@@ -60,7 +60,7 @@ export default class BottomButton extends React.Component {
 
         return(
                 <TouchableHighlight style={[this.styles.btn, {backgroundColor:this.props.backgroundColor}]} onPress={()=>this.props.modalRef.current.open()}>
-                    <Text style={{textAlign:'center', fontWeight:'bold'}}>{this.props.text}</Text>
+                    <Text style={{textAlign:'center', fontWeight:'600'}}>{this.props.text}</Text>
 
                 </TouchableHighlight>
 

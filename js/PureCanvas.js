@@ -1,8 +1,11 @@
 import React, {Component, useEffect, useRef} from 'react';
-import { StyleSheet, Text, View, Image, Dimensions, PanResponder, Animated, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, Image, Dimensions, PanResponder, Animated, TouchableHighlight, Modal, findNodeHandle, TouchableOpacity } from 'react-native';
 import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
 import { createStackNavigator } from '@react-navigation/stack';
 import CapturedFlag from './CapturedFlag'
+import Tooltip from 'react-native-walkthrough-tooltip';
+
+
 
 export default class PureCanvas extends React.Component {
 
@@ -14,9 +17,19 @@ export default class PureCanvas extends React.Component {
             pan: new Animated.ValueXY(),
             currPanel:props.currPanel,
             selected:this.props.focusBall==this.props.coords.id,
-            section:null
+            section:null,
+            toolTipVisible:false,
+            backgroundColor: this.bgColor, 
+            borderColor: this.borderColor,
+            height: vw(3),
+            width: vw(3),
+            shadowRadius:0,
+            moveY:0,
+            moveX:0
+            
           };
-          
+          this.elementRef = React.createRef();
+
         this.styles = StyleSheet.create({
             circle: {
                 
@@ -58,12 +71,16 @@ export default class PureCanvas extends React.Component {
               this.bgColor='pink'
               this.state.section=3
             }
+            this.state.backgroundColor=this.bgColor
+            this.state.borderColor=this.borderColor
             // this.setState({section:section},()=>{
             //   console.log(this.state.section, 'section updated')
             // })
             this.captured = this.props.type=='captured'
     // Add a listener for the delta value change
     this._val = { x:0, y:0 }
+    this.handleLayoutChange = this.handleLayoutChange.bind(this);
+    this.setBallStyle = this.setBallStyle.bind(this);
     this.state.pan.addListener((value) => this._val = value);
     // Initialize PanResponder with move handling
     this.panResponder = PanResponder.create({
@@ -76,7 +93,6 @@ export default class PureCanvas extends React.Component {
           x: this._val.x,
           y:this._val.y
         })
-        // this.state.pan.setValue({ x:0, y:0})
       },
       onPanResponderMove: (e,gesture)=>{
         this.state.pan.setValue({x:gesture.dx,y:gesture.dy})
@@ -142,66 +158,98 @@ export default class PureCanvas extends React.Component {
     //   this.state.pan.setValue({ x:0, y:0})
     });
     
-    this.customStyle = function(){
-      
-      if (this.state.selected==true){
-        console.log("SELECTED")
-        return({
-          width:vw(9),
-          height:vw(9),
-          backgroundColor: this.bgColor, 
-          borderColor: this.borderColor,
+    
         }
-        )
         
+
+
+
+    
+    handleLayoutChange() {
+      this.feedPost.measure( (fx, fy, width, height, px, py) => {
+        this.fromTop=py
+        this.fromLeft=px
+      })
+    }
+    setBallStyle(){
+      var currSelectedElement = findNodeHandle(this.props.selectedElementRef);
+      if (currSelectedElement!=this.elementRef && this.state.selected){
+        this.setState({selected:false,width:vw(3), height:vw(3), shadowRadius:0, moveY:-this.fromTop})
       }
-        return(
-            {
-              height: vw(3),
-                width: vw(3),
-                backgroundColor: this.bgColor, 
-                borderColor: this.borderColor,
-             })
-        
     }
-        }
-
-    shouldComponentUpdate() {
-      return false;
+    componentDidMount(){
+      this.setBallStyle();
     }
-
-    
-
-    
+    // componentWillReceiveProps(nextProps){
+    //   if (nextProps.width !== this.state.width) {
+    //     this.setState({ width: nextProps.width });
+    //   }
+    // }
 
     //should return a view with the circle at a given coordinate
   
     render() {
-      {console.log("re-render")}
-      this.customStyle=this.customStyle.bind(this)
+      
+      var ballStyle={
+        height:this.state.height,
+        width:this.state.width,
+        backgroundColor:this.state.backgroundColor,
+        borderColor:this.state.borderColor,
+        shadowRadius:this.state.shadowRadius,
+        shadowColor:this.state.borderColor,
+        transform:[{translateY:this.state.moveY, translateX:this.state.moveX}]
+        
+      }
     const panStyle = {
         transform: this.state.pan.getTranslateTransform(),
         zindex: 4
       }
       return (
+      <>
+        <Tooltip
+          isVisible={this.state.toolTipVisible}
+          content={<Text>Check this out!</Text>}
+          placement="bottom"
+          onClose={() => this.setState({ toolTipVisible: false })}
+          useReactNativeModal={false}
+          childrenWrapperStyle={{transform:[{translateY:this.state.moveY, translateX:this.state.moveX}]},this.styles.circle }
+          
+        >
+    
+        <TouchableHighlight 
         
-        <TouchableHighlight onPress={() => {
-            this.setState({selected:true})
-            console.log(this.state.section)
-            this.props.focusSectionProp(this.state.section,this.props.coords.id);
-          }} underlayColor="white">
-        
+        onLayout={
+          (event) => {this.handleLayoutChange(event) }} 
+          ref={view => { this.feedPost = view; }}
+      onPress={() => {
+          this.setState({selected:true,width:vw(4), height:vw(4), shadowRadius:4, moveY:-this.fromTop})
+          this.props.focusSectionProp(this.state.section,this.props.coords.id);
+          this.setState({toolTipVisible:true})
+          this.props.setSelectRef(this.elementRef)
+        }} underlayColor="white">
+
+                        
         <Animated.View
-        {...this.panResponder.panHandlers} style={panStyle}>
+        {...this.panResponder.panHandlers} style={panStyle}
+         
+        >
           {this.captured?<CapturedFlag 
         {...this.panResponder.panHandlers}
-        color={this.bgColor} coords={this.props.coords} borderColor={this.borderColor} style={panStyle}/>:
-        <View style={[this.customStyle(),this.styles.circle]}/>}
+        color={this.bgColor} 
+        coords={this.props.coords} 
+        borderColor={this.borderColor} 
+        style={[panStyle]} 
+        shadowRadius={this.state.shadowRadius} 
+        width={this.state.width}
+        moveY={this.state.moveY}
+        />:
+        <View ref={this.elementRef} style={[ballStyle,this.styles.circle]}/>}
         </Animated.View>
+        </TouchableHighlight>
+      
+        </Tooltip>
     
-        
-      </TouchableHighlight>
-     
+        </>
 
       );
     }

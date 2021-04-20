@@ -79,7 +79,17 @@ export default class Ball extends React.Component {
   renderBalls(){
       return this.itemProps.map((item)=>{
           return(
-                  <PureCanvas coords={item} key={item.id} type={this.props.type} focusSectionProp={this.props.focusSectionProp} focusBall = {this.props.focusBall} focusBallSection = {this.props.focusBallSection} navigation={this.props.navigation}/>
+                  <PureCanvas 
+                  coords={item} 
+                  key={item.id} 
+                  type={this.props.type} 
+                  focusSectionProp={this.props.focusSectionProp} 
+                  focusBall = {this.props.focusBall} 
+                  focusBallSection = {this.props.focusBallSection} 
+                  navigation={this.props.navigation}
+                  direction={this.props.direction}
+                  setSelectRef = {this.props.setSelectRef}
+                  selectedElementRef={this.props.selectedElementRef}/>
               
           );
       });
