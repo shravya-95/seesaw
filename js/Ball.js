@@ -10,7 +10,7 @@ export default class Ball extends React.Component {
       var radius = vw(2.5),
           direction = props.direction,                         // ball radius
           deg = -60 / 180 * Math.PI,          // direction of row start -60°
-          plankDeg =   -(direction-65) / 180 * Math.PI,
+          plankDeg =   -(direction-60) / 180 * Math.PI,
           balls = props.count,                         // number of balls to draw
           drawn = 0,                          // count balls drawn on current row
           rowLen = 1,                         // max length of current row (first=1)
@@ -28,14 +28,43 @@ export default class Ball extends React.Component {
           },
           i;
       this.itemProps=[]
+      this.handleLayoutChange = this.handleLayoutChange.bind(this);
+
+      if (props.type=="tagged"){
+        if (direction<0){
+          x=0
+          cx=0
+        }
+        else{
+          x=vw(25)-(balls/3 * vw(4))
+          cx=vw(25) - (balls/3 * vw(4))
+        }
+        
+      }
 
       if (props.type == "finished"){
-        x=vw(64)
-        cx=vw(64)
+        if (direction<0){
+          x=vw(60)
+          cx=vw(60)
+        }
+        else{
+          x = vw(90) - (balls/3 * vw(4))
+          cx=vw(90) - (balls/3 * vw(4))
+
+        }
+        
       }
       if (props.type=="captured"){
-        x=vw(100)/3 + radius +3
-        cx=vw(100)/3 + radius + 3
+        if (direction<0){
+          x=vw(26)
+          cx=vw(26)
+        }
+        else{
+          x = vw(58) - (balls/3 * vw(4))
+          cx=vw(58) - (balls/3 * vw(4))
+
+        }
+        
       }
       if (props.type=="untagged"){
         x=10,
@@ -94,10 +123,18 @@ export default class Ball extends React.Component {
           );
       });
   }
+  handleLayoutChange() {
+    this.feedPost.measure( (fx, fy, width, height, px, py) => {
+      this.fromTop=py
+      this.fromLeft=px
+      console.log(this.props.type)
+      console.log(fx, fy, width, height, px, py)
+    })
+  }
     render() {
         
       return (
-          <View style={{width:'auto',height:'auto', position:"relative"}}>
+          <View style={{width:'auto',height:'100%', position:"relative"}}>
               {this.renderBalls()}
           </View>
       )

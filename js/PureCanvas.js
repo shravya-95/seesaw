@@ -215,14 +215,14 @@ export default class PureCanvas extends React.Component {
           (event) => {this.handleLayoutChange(event) }} 
           ref={view => { this.feedPost = view; }}
       onPress={() => {
-          this.setState({toolTipVisible:true,selected:true,width:vw(4), height:vw(4), shadowRadius:4, moveY:-this.fromTop})
+          this.setState({toolTipVisible:true,selected:true,width:vw(4), height:vw(4), shadowRadius:4, moveY:-this.fromTop-this.props.coords.itemCy+vh(10)})
           this.props.focusSectionProp(this.state.section,this.props.coords.id);
           this.props.setSelectRef(this.elementRef)
         }} underlayColor="white">
 
                         
         <Animated.View
-        {...this.panResponder.panHandlers} style={[panStyle]}
+        {...this.panResponder.panHandlers} style={[panStyle,{height:'100%'}]}
          
         >
           
@@ -230,10 +230,10 @@ export default class PureCanvas extends React.Component {
           mode='tooltip'
           isVisible={this.state.toolTipVisible}
           placement='bottom'
-          verticalOffset={this.state.moveY-this.props.coords.itemCy}
+          verticalOffset={-this.props.coords.itemCy+this.state.moveY-100}
           onRequestClose={()=> this.setState({toolTipVisible:false})}
           backgroundStyle={{backgroundColor:'rgba(255,255,255,0.3)'}}
-          popoverStyle={{backgroundColor:'rgba(255,255,255,0.8)', width:vh(20),padding:10, zIndex:10, transform:[{rotate:"45deg"}]}}
+          popoverStyle={{backgroundColor:'rgba(255,255,255,0.8)', width:vh(40),padding:10, transform:[{rotate:"45deg"}]}}
           from={(this.captured?<CapturedFlag 
             {...this.panResponder.panHandlers}
             color={this.bgColor} 
@@ -246,7 +246,7 @@ export default class PureCanvas extends React.Component {
             />:
             <View ref={this.elementRef} style={[ballStyle,this.styles.circle]}/>)}
           >
-            <Text>This is the contents of the popover</Text>
+            <Text>Flag Description - here is some detail about the flag</Text>
           </Popover>
         
         </Animated.View>

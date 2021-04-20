@@ -43,6 +43,9 @@ export default function App(){
 }
 
 function SeeSaw({navigation}){
+  var tagged = 10;
+  var finished = 8;
+  var capture=5;
   //TODO: character?
   //TODO: tap - show detail
   const [plankLayout, setPlankLayout] = useState(null);
@@ -123,9 +126,7 @@ function SeeSaw({navigation}){
   }
   
   }
-  var tagged = 1;
-  var finished = 10;
-  var capture=5;
+ 
 
   var drawerText={}
   if (selectedBall.startsWith('tagged')){
@@ -197,7 +198,7 @@ function SeeSaw({navigation}){
         placement='bottom'
         onRequestClose={()=> setToolTipVisible(false)}
         backgroundStyle={{backgroundColor:'rgba(255,255,255,0.3)'}}
-        popoverStyle={{backgroundColor:'white', width:vw(20), zIndex:10, transform:[{rotate:'45deg'}]}}
+        popoverStyle={{backgroundColor:'white', width:vw(50), transform:[{rotate:'45deg'}]}}
         from={selectedElementRef}
         >
           <Text>This is the contents of the popover</Text>
