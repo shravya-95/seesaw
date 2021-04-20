@@ -14,6 +14,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import BottomButton from './js/BottomButton'
 import Modal from 'react-native-modalbox';
 import {Camera} from 'expo-camera';
+import Popover from 'react-native-popover-view';
+
 /**
  * TODO:
  * 1. Selected ball - highlight
@@ -55,6 +57,7 @@ function SeeSaw({navigation}){
   const [bottomDrawerVisible, setBottomDrawerVisible]=useState(false);
   const [isOpen, setIsOpen]=useState(false);
   const [bottomDrawerColor, setBottomDrawerColor]=useState("None");
+  const [toolTipVisible, setToolTipVisible] = useState(false)
   const modalRef = React.useRef();
   var selectedElementRef = React.useRef();
 
@@ -188,7 +191,17 @@ function SeeSaw({navigation}){
         <View style={{ flex: 1, height:'100%', borderTopWidth:10, borderTopColor:secThreeBorderColor,backgroundColor:secThreeBgColor }} >
           <Text style={{top:vh(2), color:'white', textAlign:'center'}}>Finished</Text></View>
         </View>
-      
+        <Popover
+        mode='tooltip'
+        isVisible={true}
+        placement='bottom'
+        onRequestClose={()=> setToolTipVisible(false)}
+        backgroundStyle={{backgroundColor:'rgba(255,255,255,0.3)'}}
+        popoverStyle={{backgroundColor:'white', width:vw(20), zIndex:10, transform:[{rotate:'45deg'}]}}
+        from={selectedElementRef}
+        >
+          <Text>This is the contents of the popover</Text>
+        </Popover>
         <View style={[styles.plank, {transform:[{rotate:torque(tagged,finished)+'deg'}]}]}>
         
         <Ball direction={torque(tagged,finished)} 

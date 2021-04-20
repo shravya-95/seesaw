@@ -222,17 +222,18 @@ export default class PureCanvas extends React.Component {
 
                         
         <Animated.View
-        {...this.panResponder.panHandlers} style={panStyle}
+        {...this.panResponder.panHandlers} style={[panStyle]}
          
         >
+          
           <Popover
           mode='tooltip'
           isVisible={this.state.toolTipVisible}
           placement='bottom'
-          verticalOffset={this.state.moveY}
+          verticalOffset={this.state.moveY-this.props.coords.itemCy}
           onRequestClose={()=> this.setState({toolTipVisible:false})}
           backgroundStyle={{backgroundColor:'rgba(255,255,255,0.3)'}}
-          popoverStyle={{backgroundColor:this.state.borderColor, width:vw(20), zIndex:10, transform:[{rotate:'45deg'}]}}
+          popoverStyle={{backgroundColor:'rgba(255,255,255,0.8)', width:vh(20),padding:10, zIndex:10, transform:[{rotate:"45deg"}]}}
           from={(this.captured?<CapturedFlag 
             {...this.panResponder.panHandlers}
             color={this.bgColor} 
@@ -247,7 +248,7 @@ export default class PureCanvas extends React.Component {
           >
             <Text>This is the contents of the popover</Text>
           </Popover>
-          
+        
         </Animated.View>
         </TouchableHighlight>
       
