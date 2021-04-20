@@ -69,7 +69,9 @@ export default class PureCanvas extends React.Component {
                 this.state.section=3
             }
             else if (props.type=="untagged"){
-              this.bgColor='pink'
+              this.bgColor='None'
+              this.borderColor="#E1370E"
+              this.borderStyle= 'dashed'
               this.state.section=3
             }
             this.state.backgroundColor=this.bgColor
@@ -104,7 +106,9 @@ export default class PureCanvas extends React.Component {
     },
       onPanResponderRelease        : (e, gesture) => {
         //   this.state.pan.extractOffset();
-          
+            if (this.props.type=="untagged"){
+              //navigate to camera
+            }
           
             if (gesture.moveX<vw(33)){
                 console.log("Entered 1st panel")
@@ -121,7 +125,7 @@ export default class PureCanvas extends React.Component {
             }
             else if (gesture.moveX>vw(33) && gesture.moveX<vw(66)){
                 console.log("Entered 2nd panel");
-                if (this.props.type=='captured' || this.props.type=='finished'){
+                if (this.props.type=='captured' || this.props.type=='finished' || this.props.type=='untagged'){
                 Animated.spring(this.state.pan, {
                     toValue: { x: 0, y: 0 },
                     friction: 5
@@ -136,7 +140,7 @@ export default class PureCanvas extends React.Component {
           }
           else if(gesture.moveX>vw(66)){
               console.log("Entered 3rd panel")
-              if (this.props.type=='finished' || this.props.type=='tagged'){
+              if (this.props.type=='finished' || this.props.type=='tagged'||  this.props.type=='untagged'){
                 Animated.spring(this.state.pan, {
                     toValue: { x: 0, y: 0 },
                     friction: 5
@@ -198,6 +202,7 @@ export default class PureCanvas extends React.Component {
         borderColor:this.state.borderColor,
         shadowRadius:this.state.shadowRadius,
         shadowColor:this.state.borderColor,
+        borderStyle:this.borderStyle,
         transform:[{translateY:this.state.moveY, translateX:this.state.moveX}]
         
       }

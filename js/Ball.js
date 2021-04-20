@@ -21,11 +21,6 @@ export default class Ball extends React.Component {
               x: radius * 1.5 * Math.cos(deg),
               y: radius * 1.5 * Math.sin(deg)
           },
-          pv = {
-              //vector for the plank
-              x:radius * 1.5 * Math.cos(plankDeg),
-              y: radius * 1.5 * Math.sin(plankDeg)
-          },
           i;
       this.itemProps=[]
       this.handleLayoutChange = this.handleLayoutChange.bind(this);
@@ -67,11 +62,17 @@ export default class Ball extends React.Component {
         
       }
       if (props.type=="untagged"){
-        x=10,
-        cx=10
-        y=vh(100)-50
-        cy=vh(100)-50
+        x=-10,
+        cx=-10
+        y=vh(100)-20
+        cy=vh(100)-20
+        plankDeg = 60 / 180 * Math.PI
       }
+      var pv = {
+        //vector for the plank
+        x:radius * 1.5 * Math.cos(plankDeg),
+        y: radius * 1.5 * Math.sin(plankDeg)
+    }
       
 
       for(i = 0; i <  balls; i++) {
@@ -134,7 +135,7 @@ export default class Ball extends React.Component {
     render() {
         
       return (
-          <View style={{width:'auto',height:'100%', position:"relative"}}>
+          <View style={{height:'100%', position:"absolute"}}>
               {this.renderBalls()}
           </View>
       )

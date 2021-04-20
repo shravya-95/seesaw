@@ -185,12 +185,21 @@ function SeeSaw({navigation}){
     <View style={[styles.container,{flexDirection: "row", flex:9}]}>
         <View style={{ flex: 1, height:'100%' , borderTopWidth:10, borderTopColor:secOneBorderColor, borderRightColor: 'gray', borderRightWidth:2, backgroundColor:secOneBgColor}} >
           <Text style={{top:vh(2), color:'white', textAlign:'center'}}>Flagged</Text>
+          <Ball direction={torque(tagged,finished)} 
+        style={{position:'absolute', alignSelf:'flex-start', width:'100%'}}
+        count={6} type="untagged" 
+        focusSectionProp={focusSection} 
+        focusBall={setSelectedBall} 
+        focusBallSection={setSelectedBallSection}
+        setSelectRef = {setSelectRef}
+        selectedElementRef={selectedElementRef}/>
         </View>
         <View style={{ flex: 1,  height:'100%', borderTopWidth:10, borderTopColor:secTwoBorderColor, borderRightColor: 'gray', borderRightWidth:2,backgroundColor:secTwoBgColor }} >
           <Text style={{top:vh(2), color:'white', textAlign:'center'}}>Fixed</Text>
         </View>
         <View style={{ flex: 1, height:'100%', borderTopWidth:10, borderTopColor:secThreeBorderColor,backgroundColor:secThreeBgColor }} >
           <Text style={{top:vh(2), color:'white', textAlign:'center'}}>Finished</Text></View>
+          
         </View>
         <Popover
         mode='tooltip'
@@ -235,8 +244,8 @@ function SeeSaw({navigation}){
         
 
       </View>
+      
 
-      <Button containerStyle={styles.addFlagWrapper} buttonStyle={styles.addFlagBtn} titleStyle={{color:'black', fontWeight:'600'}} title="+" onPress={()=>navigation.navigate('Camera')}/>
       {bottomDrawerVisible?<BottomButton
       text={drawerText.title} backgroundColor={bottomDrawerColor} modalRef={modalRef}>      
       </BottomButton>:null}  
