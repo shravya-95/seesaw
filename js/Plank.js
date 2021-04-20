@@ -4,9 +4,17 @@ import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
 const Plank = function(props){
     
     return(
-    <div>
+    
+            <Image source = {require('D:/RA/SeeSaw/js/res/plank_new.png')} 
+    style = {[plankStyle.plank ,{transform:[{rotate:(props.degree)+'deg'}]}]}  onLayout={event => {
+        const layout = event.nativeEvent.layout;
+        console.log('height:', layout.height);
+        console.log('width:', layout.width);
+        console.log('x:', layout.x);
+        console.log('y:', layout.y);
+    }}/>
 
-    </div>);
+    );
 } 
 const win = Dimensions.get('window');
 var plankStyle = StyleSheet.create({

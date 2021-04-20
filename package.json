@@ -30,7 +30,8 @@
     "react-native-modalbox": "2.0.2",
     "react-native-elements": "3.3.2",
     "expo-camera": "4.0.0",
-    "react-native-walkthrough-tooltip": "1.2.0"
+    "react-native-walkthrough-tooltip": "1.2.0",
+    "react-native-popover-view": "4.0.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"

@@ -206,15 +206,7 @@ export default class PureCanvas extends React.Component {
       }
       return (
       <>
-        <Tooltip
-          isVisible={this.state.toolTipVisible}
-          content={<Text>Check this out!</Text>}
-          placement="bottom"
-          onClose={() => this.setState({ toolTipVisible: false })}
-          useReactNativeModal={false}
-          childrenWrapperStyle={{transform:[{translateY:this.state.moveY, translateX:this.state.moveX}]},this.styles.circle }
-          
-        >
+        
     
         <TouchableHighlight 
         
@@ -233,6 +225,15 @@ export default class PureCanvas extends React.Component {
         {...this.panResponder.panHandlers} style={panStyle}
          
         >
+          <Tooltip
+          isVisible={this.state.toolTipVisible}
+          content={<Text>Check this out!</Text>}
+          placement="bottom"
+          onClose={() => this.setState({ toolTipVisible: false })}
+          useReactNativeModal={false}
+          childrenWrapperStyle={{transform:[{translateY:this.state.moveY}]},this.styles.circle }
+          
+        >
           {this.captured?<CapturedFlag 
         {...this.panResponder.panHandlers}
         color={this.bgColor} 
@@ -244,10 +245,11 @@ export default class PureCanvas extends React.Component {
         moveY={this.state.moveY}
         />:
         <View ref={this.elementRef} style={[ballStyle,this.styles.circle]}/>}
+        </Tooltip>
         </Animated.View>
         </TouchableHighlight>
       
-        </Tooltip>
+        
     
         </>
 
