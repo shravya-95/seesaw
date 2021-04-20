@@ -4,6 +4,7 @@ import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
 import { createStackNavigator } from '@react-navigation/stack';
 import CapturedFlag from './CapturedFlag'
 import Tooltip from 'react-native-walkthrough-tooltip';
+import Popover from 'react-native-popover-view';
 
 
 
@@ -202,7 +203,7 @@ export default class PureCanvas extends React.Component {
       }
     const panStyle = {
         transform: this.state.pan.getTranslateTransform(),
-        zindex: 4
+        
       }
       return (
       <>
@@ -214,9 +215,8 @@ export default class PureCanvas extends React.Component {
           (event) => {this.handleLayoutChange(event) }} 
           ref={view => { this.feedPost = view; }}
       onPress={() => {
-          this.setState({selected:true,width:vw(4), height:vw(4), shadowRadius:4, moveY:-this.fromTop})
+          this.setState({toolTipVisible:true,selected:true,width:vw(4), height:vw(4), shadowRadius:4, moveY:-this.fromTop})
           this.props.focusSectionProp(this.state.section,this.props.coords.id);
-          this.setState({toolTipVisible:true})
           this.props.setSelectRef(this.elementRef)
         }} underlayColor="white">
 
@@ -225,27 +225,29 @@ export default class PureCanvas extends React.Component {
         {...this.panResponder.panHandlers} style={panStyle}
          
         >
-          <Tooltip
+          <Popover
+          mode='tooltip'
           isVisible={this.state.toolTipVisible}
-          content={<Text>Check this out!</Text>}
-          placement="bottom"
-          onClose={() => this.setState({ toolTipVisible: false })}
-          useReactNativeModal={false}
-          childrenWrapperStyle={{transform:[{translateY:this.state.moveY}]},this.styles.circle }
+          placement='bottom'
+          verticalOffset={this.state.moveY}
+          onRequestClose={()=> this.setState({toolTipVisible:false})}
+          backgroundStyle={{backgroundColor:'rgba(255,255,255,0.3)'}}
+          popoverStyle={{backgroundColor:this.state.borderColor, width:vw(20), zIndex:10, transform:[{rotate:'45deg'}]}}
+          from={(this.captured?<CapturedFlag 
+            {...this.panResponder.panHandlers}
+            color={this.bgColor} 
+            coords={this.props.coords} 
+            borderColor={this.borderColor} 
+            style={[panStyle]} 
+            shadowRadius={this.state.shadowRadius} 
+            width={this.state.width}
+            moveY={this.state.moveY}
+            />:
+            <View ref={this.elementRef} style={[ballStyle,this.styles.circle]}/>)}
+          >
+            <Text>This is the contents of the popover</Text>
+          </Popover>
           
-        >
-          {this.captured?<CapturedFlag 
-        {...this.panResponder.panHandlers}
-        color={this.bgColor} 
-        coords={this.props.coords} 
-        borderColor={this.borderColor} 
-        style={[panStyle]} 
-        shadowRadius={this.state.shadowRadius} 
-        width={this.state.width}
-        moveY={this.state.moveY}
-        />:
-        <View ref={this.elementRef} style={[ballStyle,this.styles.circle]}/>}
-        </Tooltip>
         </Animated.View>
         </TouchableHighlight>
       

@@ -190,12 +190,7 @@ function SeeSaw({navigation}){
         </View>
       
         <View style={[styles.plank, {transform:[{rotate:torque(tagged,finished)+'deg'}]}]}>
-        <Tooltip
-      withOverlay={true}
-      popover={<Text>I am here</Text>}
-     
-      backgroundColor="white"
-      ModalComponent={Modal}>
+        
         <Ball direction={torque(tagged,finished)} 
         count={tagged} type="tagged" 
         focusSectionProp={focusSection} 
@@ -222,7 +217,6 @@ function SeeSaw({navigation}){
         focusBallSection={setSelectedBallSection}
         setSelectRef = {setSelectRef}
         selectedElementRef={selectedElementRef}/>
-        </Tooltip>
         <Plank/>
         
 
