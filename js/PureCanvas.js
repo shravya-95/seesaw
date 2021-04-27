@@ -54,22 +54,27 @@ export default class PureCanvas extends React.Component {
                 this.currPanel=1;
                 this.bgColor="None"
                 this.borderColor="#E1370E"
+                this.borderStyle="solid"
                 this.state.section=1
             }
             else if (props.type=="captured"){
                 this.currPanel=2
                 this.bgColor="#F1CC34"
                 this.borderColor="#F1CC34"
+                this.borderStyle="solid"
                 this.state.section=2
             }
             else if (props.type=="finished"){
                 this.currPanel=3
                 this.bgColor="#33B807"
                 this.borderColor="#33B807"
+                this.borderStyle="solid"
                 this.state.section=3
             }
             else if (props.type=="untagged"){
-              this.bgColor='pink'
+              this.bgColor='transparent'
+              this.borderColor="#E1370E"
+              this.borderStyle="dashed"
               this.state.section=3
             }
             this.state.backgroundColor=this.bgColor
@@ -198,6 +203,7 @@ export default class PureCanvas extends React.Component {
         borderColor:this.state.borderColor,
         shadowRadius:this.state.shadowRadius,
         shadowColor:this.state.borderColor,
+        borderStyle:this.borderStyle,
         transform:[{translateY:this.state.moveY, translateX:this.state.moveX}]
         
       }

@@ -29,11 +29,13 @@ export default class Ball extends React.Component {
           i;
       this.itemProps=[]
       this.handleLayoutChange = this.handleLayoutChange.bind(this);
-
+      this.base = this.findBase(balls)
       if (props.type=="tagged"){
         if (direction<0){
-          x=vw(10)
-          cx=vw(10)
+          // x=vw(10)
+          // cx=vw(10)
+          x = ((this.base) * vw(3))
+          cx = ((this.base) * vw(3))
         }
         else{
           x=vw(23)
@@ -44,8 +46,8 @@ export default class Ball extends React.Component {
 
       if (props.type == "finished"){
         if (direction<0){
-          x=vw(60)
-          cx=vw(60)
+          x=vw(59)+((this.base) * vw(3))
+          cx=vw(59)+((this.base) * vw(3))
         }
         else{
           x = vw(87) 
@@ -56,8 +58,8 @@ export default class Ball extends React.Component {
       }
       if (props.type=="captured"){
         if (direction<0){
-          x=vw(26)
-          cx=vw(26)
+          x=vw(24)+((this.base) * vw(3))
+          cx=vw(24)+((this.base) * vw(3))
         }
         else{
           x = vw(57)
@@ -67,8 +69,8 @@ export default class Ball extends React.Component {
         
       }
       if (props.type=="untagged"){
-        x=10,
-        cx=10
+        x=70,
+        cx=70
         y=vh(100)-50
         cy=vh(100)-50
       }
@@ -102,6 +104,11 @@ export default class Ball extends React.Component {
       this.ctx = ctx;
       this.width = this.ctx.canvas.width;
       this.height = this.ctx.canvas.height;
+    }
+    findBase(ballCount){
+      var result = Math.ceil(-1  + Math.sqrt(Math.pow(1, 2) - (4 * 1 * (-1) *2*ballCount))) / (2 * 1); 
+      console.log("result="+result+"Ballcount = "+ballCount);
+      return result
     }
   
 

@@ -43,9 +43,9 @@ export default function App(){
 }
 
 function SeeSaw({navigation}){
-  var tagged = 12
-  var finished = 2;
-  var capture=10;
+  var tagged = 5
+  var finished = 10;
+  var capture=5;
   //TODO: character?
   //TODO: tap - show detail
   const [plankLayout, setPlankLayout] = useState(null);
@@ -185,6 +185,16 @@ function SeeSaw({navigation}){
     <View style={[styles.container,{flexDirection: "row", flex:9}]}>
         <View style={{ flex: 1, height:'100%' , borderTopWidth:10, borderTopColor:secOneBorderColor, borderRightColor: 'gray', borderRightWidth:2, backgroundColor:secOneBgColor}} >
           <Text style={{top:vh(2), color:'white', textAlign:'center'}}>Flagged</Text>
+          <Ball direction={torque(tagged,finished)} 
+        count={6} type="untagged" 
+        style={{alignSelf:"flex-end"}}
+        focusSectionProp={focusSection} 
+        focusBall={setSelectedBall} 
+        focusBallSection={setSelectedBallSection} 
+        navigation={navigation}
+        setSelectRef = {setSelectRef}
+        selectedElementRef={selectedElementRef}
+        />
         </View>
         <View style={{ flex: 1,  height:'100%', borderTopWidth:10, borderTopColor:secTwoBorderColor, borderRightColor: 'gray', borderRightWidth:2,backgroundColor:secTwoBgColor }} >
           <Text style={{top:vh(2), color:'white', textAlign:'center'}}>Fixed</Text>
@@ -236,7 +246,6 @@ function SeeSaw({navigation}){
 
       </View>
 
-      <Button containerStyle={styles.addFlagWrapper} buttonStyle={styles.addFlagBtn} titleStyle={{color:'black', fontWeight:'600'}} title="+" onPress={()=>navigation.navigate('Camera')}/>
       {bottomDrawerVisible?<BottomButton
       text={drawerText.title} backgroundColor={bottomDrawerColor} modalRef={modalRef}>      
       </BottomButton>:null}  
