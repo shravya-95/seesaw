@@ -178,9 +178,11 @@ export default class PureCanvas extends React.Component {
       })
     }
     setBallStyle(){
-      var currSelectedElement = findNodeHandle(this.props.selectedElementRef);
-      if (currSelectedElement!=this.elementRef && this.state.selected){
-        this.setState({selected:false,width:vw(3), height:vw(3), shadowRadius:0, moveY:-this.fromTop})
+      if (typeof(this.props.selectedElementRef)==typeof(this.elementRef) ){
+        var currSelectedElement = findNodeHandle(this.props.selectedElementRef.current);
+        if (currSelectedElement!=this.elementRef.current && this.state.selected){
+          this.setState({selected:false,width:vw(3), height:vw(3), shadowRadius:0, moveY:-this.fromTop})
+        }
       }
     }
     componentDidMount(){

@@ -169,18 +169,7 @@ function SeeSaw({navigation}){
   }
 
   return (
-    <View style={{overflow:'hidden', flex:1, backgroundColor:'black'}} 
-    onStartShouldSetResponder={evt => {
-      evt.persist();
-      let elementHandle = findNodeHandle(selectedElementRef);
-        if (elementHandle == evt.target) {
-          return;
-        }
-        setSelectRef(evt.target);
-        console.log(evt.target);
-      
-    }}
-    >
+    <View style={{overflow:'hidden', flex:1, backgroundColor:'black'}}     >
     
     <View style={[styles.container,{flexDirection: "row", flex:9}]}>
         <View style={{ flex: 1, height:'100%' , borderTopWidth:10, borderTopColor:secOneBorderColor, borderRightColor: 'gray', borderRightWidth:2, backgroundColor:secOneBgColor}} >
