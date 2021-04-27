@@ -9,8 +9,8 @@ export default class Ball extends React.Component {
       var props = this.props;
       var radius = vw(2.5),
           direction = props.direction,                         // ball radius
-          deg = -60 / 180 * Math.PI,          // direction of row start -60°
-          plankDeg =   -(direction-60) / 180 * Math.PI,
+          deg = -180 / 180 * Math.PI,          // direction of row start -60°
+          plankDeg =   -(direction-300) / 180 * Math.PI,
           balls = props.count,                         // number of balls to draw
           drawn = 0,                          // count balls drawn on current row
           rowLen = 1,                         // max length of current row (first=1)
