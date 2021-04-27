@@ -203,7 +203,7 @@ export default class PureCanvas extends React.Component {
         shadowRadius:this.state.shadowRadius,
         shadowColor:this.state.borderColor,
         borderStyle:this.borderStyle,
-        transform:[{translateY:this.state.moveY, translateX:this.state.moveX}]
+        transform:[{translateY:this.state.moveY},{translateX:this.state.moveX}]
         
       }
     const panStyle = {
