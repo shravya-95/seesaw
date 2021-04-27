@@ -43,9 +43,9 @@ export default function App(){
 }
 
 function SeeSaw({navigation}){
-  var tagged = 10;
-  var finished = 8;
-  var capture=5;
+  var tagged = 12
+  var finished = 2;
+  var capture=10;
   //TODO: character?
   //TODO: tap - show detail
   const [plankLayout, setPlankLayout] = useState(null);

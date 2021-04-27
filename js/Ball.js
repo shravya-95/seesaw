@@ -32,12 +32,12 @@ export default class Ball extends React.Component {
 
       if (props.type=="tagged"){
         if (direction<0){
-          x=0
-          cx=0
+          x=vw(10)
+          cx=vw(10)
         }
         else{
-          x=vw(25)-(balls/3 * vw(4))
-          cx=vw(25) - (balls/3 * vw(4))
+          x=vw(23)
+          cx=vw(23) 
         }
         
       }
@@ -48,8 +48,8 @@ export default class Ball extends React.Component {
           cx=vw(60)
         }
         else{
-          x = vw(90) - (balls/3 * vw(4))
-          cx=vw(90) - (balls/3 * vw(4))
+          x = vw(87) 
+          cx=vw(87)
 
         }
         
@@ -60,8 +60,8 @@ export default class Ball extends React.Component {
           cx=vw(26)
         }
         else{
-          x = vw(58) - (balls/3 * vw(4))
-          cx=vw(58) - (balls/3 * vw(4))
+          x = vw(57)
+          cx=vw(57)
 
         }
         
