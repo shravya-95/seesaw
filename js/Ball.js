@@ -69,10 +69,10 @@ export default class Ball extends React.Component {
         
       }
       if (props.type=="untagged"){
-        x=70,
-        cx=70
-        y=vh(100)-50
-        cy=vh(100)-50
+        x=50,
+        cx=50
+        y=vh(80)
+        cy=vh(80)
       }
       
 

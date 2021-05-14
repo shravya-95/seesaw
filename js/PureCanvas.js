@@ -52,7 +52,7 @@ export default class PureCanvas extends React.Component {
             var section = 0;
             if (props.type=="tagged"){
                 this.currPanel=1;
-                this.bgColor="None"
+                this.bgColor="transparent"
                 this.borderColor="#E1370E"
                 this.borderStyle="solid"
                 this.state.section=1
@@ -121,12 +121,13 @@ export default class PureCanvas extends React.Component {
                 }
                 else{
                   // this.props.navigation.navigate("Steps")
+                  //tip the see saw
                 }
 
             }
             else if (gesture.moveX>vw(33) && gesture.moveX<vw(66)){
-                console.log("Entered 2nd panel");
-                if (this.props.type=='captured' || this.props.type=='finished'){
+                console.log("Entered 2nd panel"); 
+                if (this.props.type=='captured' || this.props.type=='finished' || this.props.type=='untagged'){
                 Animated.spring(this.state.pan, {
                     toValue: { x: 0, y: 0 },
                     friction: 5
@@ -141,7 +142,7 @@ export default class PureCanvas extends React.Component {
           }
           else if(gesture.moveX>vw(66)){
               console.log("Entered 3rd panel")
-              if (this.props.type=='finished' || this.props.type=='tagged'){
+              if (this.props.type=='finished' || this.props.type=='tagged' || this.props.type=='untagged'){
                 Animated.spring(this.state.pan, {
                     toValue: { x: 0, y: 0 },
                     friction: 5
@@ -213,11 +214,15 @@ export default class PureCanvas extends React.Component {
         transform: this.state.pan.getTranslateTransform(),
         
       }
+      const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
       return (
       <>
         
-    
-        <TouchableHighlight 
+        <Animated.View
+        {...this.panResponder.panHandlers} style={[panStyle,{height:'100%'}]}
+         
+        >
+        <AnimatedTouchable 
         
         onLayout={
           (event) => {this.handleLayoutChange(event) }} 
@@ -229,10 +234,7 @@ export default class PureCanvas extends React.Component {
         }} underlayColor="white">
 
                         
-        <Animated.View
-        {...this.panResponder.panHandlers} style={[panStyle,{height:'100%'}]}
-         
-        >
+        
           
           <Popover
           mode='tooltip'
@@ -257,8 +259,9 @@ export default class PureCanvas extends React.Component {
             <Text>Flag Description - here is some detail about the flag</Text>
           </Popover>
         
+        
+        </AnimatedTouchable>
         </Animated.View>
-        </TouchableHighlight>
       
         
     

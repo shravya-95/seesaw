@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Dimensions, TouchableOpacity, ScrollView, Image,findNodeHandle } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity, ScrollView, Image,findNodeHandle, SafeAreaView } from 'react-native';
 import {Button, Tooltip} from 'react-native-elements';
 import Plank from './js/Plank';
 import Weight from './js/Weight'
@@ -28,6 +28,7 @@ import Popover from 'react-native-popover-view';
 const Stack = createStackNavigator();
 export default function App(){
   return(
+    <SafeAreaView style={{flex:1}}>
     <NavigationContainer>
       <Stack.Navigator
       screenOptions={{
@@ -39,19 +40,20 @@ export default function App(){
       </Stack.Navigator>
       
     </NavigationContainer>
+    </SafeAreaView>
   )
 }
 
 function SeeSaw({navigation}){
-  var tagged = 5
-  var finished = 10;
+  var tagged = 8
+  var finished = 2;
   var capture=5;
   //TODO: character?
   //TODO: tap - show detail
   const [plankLayout, setPlankLayout] = useState(null);
-  const [secOneBgColor, setSecOneBgColor]=useState("None");
-  const [secTwoBgColor, setSecTwoBgColor]=useState("None");
-  const [secThreeBgColor, setSecThreeBgColor]=useState("None");
+  const [secOneBgColor, setSecOneBgColor]=useState('transparent');
+  const [secTwoBgColor, setSecTwoBgColor]=useState("transparent");
+  const [secThreeBgColor, setSecThreeBgColor]=useState("transparent");
   const [secOneBorderColor, setSecOneBorderColor]=useState("rgba(225, 55, 14, 0.3)");
   const [secTwoBorderColor, setSecTwoBorderColor]=useState("rgba(241, 204, 52, 0.3)");
   const [secThreeBorderColor, setSecThreeBorderColor]=useState("rgba(51, 184, 7, 0.3)");
@@ -59,7 +61,7 @@ function SeeSaw({navigation}){
   const [selectedBallSection, setSelectedBallSection]=useState(0)
   const [bottomDrawerVisible, setBottomDrawerVisible]=useState(false);
   const [isOpen, setIsOpen]=useState(false);
-  const [bottomDrawerColor, setBottomDrawerColor]=useState("None");
+  const [bottomDrawerColor, setBottomDrawerColor]=useState("transparent");
   const [toolTipVisible, setToolTipVisible] = useState(false)
   const modalRef = React.useRef();
   var selectedElementRef = React.useRef();
@@ -74,30 +76,30 @@ function SeeSaw({navigation}){
       setSecOneBorderColor("rgb(225, 55, 14)")
       setBottomDrawerVisible(true)
       setBottomDrawerColor("#F1ECE7")
-      setSecTwoBgColor("None")
+      setSecTwoBgColor("transparent")
       setSecTwoBorderColor("rgba(241, 204, 52, 0.3)")
-      setSecThreeBgColor("None")
+      setSecThreeBgColor("transparent")
       setSecThreeBorderColor("rgba(51, 184, 7, 0.3)")
     }
     if (focus==2){
       setSelectedBallSection(2)
 
-      setSecOneBgColor("None")
+      setSecOneBgColor("transparent")
       setSecOneBorderColor("rgba(225, 55, 14, 0.3)")
       setSecTwoBgColor("rgba(241, 204, 52, 0.3)")
       setSecTwoBorderColor("rgba(241, 204, 52, 1.0)")
       setBottomDrawerVisible(true)
       setBottomDrawerColor("rgb(241, 204, 52)")
-      setSecThreeBgColor("None")
+      setSecThreeBgColor("transparent")
       setSecThreeBorderColor("rgba(51, 184, 7, 0.3)")
 
     }
     if (focus==3){
       setSelectedBallSection(3)
-      setSecOneBgColor("None")
+      setSecOneBgColor("transparent")
       setSecOneBorderColor("rgba(225, 55, 14, 0.3)")
 
-      setSecTwoBgColor("None")
+      setSecTwoBgColor("transparent")
       setSecTwoBorderColor("rgba(241, 204, 52, 0.3)")
 
       setSecThreeBgColor("rgba(51, 184, 7, 0.3)")
@@ -176,7 +178,7 @@ function SeeSaw({navigation}){
           <Text style={{top:vh(2), color:'white', textAlign:'center'}}>Flagged</Text>
           <Ball direction={torque(tagged,finished)} 
         count={6} type="untagged" 
-        style={{alignSelf:"flex-end"}}
+        
         focusSectionProp={focusSection} 
         focusBall={setSelectedBall} 
         focusBallSection={setSelectedBallSection} 
