@@ -44,7 +44,7 @@ export default function App(){
 
 function SeeSaw({navigation}){
   var tagged = 5
-  var finished = 2;
+  var finished = 8;
   var capture=5;
   //TODO: character?
   //TODO: tap - show detail
