@@ -44,7 +44,7 @@ export default function App(){
 
 function SeeSaw({navigation}){
   var tagged = 5
-  var finished = 10;
+  var finished = 2;
   var capture=5;
   //TODO: character?
   //TODO: tap - show detail
@@ -191,17 +191,7 @@ function SeeSaw({navigation}){
         <View style={{ flex: 1, height:'100%', borderTopWidth:10, borderTopColor:secThreeBorderColor,backgroundColor:secThreeBgColor }} >
           <Text style={{top:vh(2), color:'white', textAlign:'center'}}>Finished</Text></View>
         </View>
-        <Popover
-        mode='tooltip'
-        isVisible={true}
-        placement='bottom'
-        onRequestClose={()=> setToolTipVisible(false)}
-        backgroundStyle={{backgroundColor:'rgba(255,255,255,0.3)'}}
-        popoverStyle={{backgroundColor:'white', width:vw(50), transform:[{rotate:'45deg'}]}}
-        from={selectedElementRef}
-        >
-          <Text>This is the contents of the popover</Text>
-        </Popover>
+        
         <View style={[styles.plank, {transform:[{rotate:torque(tagged,finished)+'deg'}]}]}>
         
         <Ball direction={torque(tagged,finished)} 
