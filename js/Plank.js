@@ -5,7 +5,7 @@ const Plank = function(props){
     
     return(
     
-            <Image source = {require('D:/RA/SeeSaw/js/res/plank_new.png')} 
+            <Image source = {require('./res/plank_new.png')} 
     style = {[plankStyle.plank]}  onLayout={event => {
         const layout = event.nativeEvent.layout;
         console.log('height:', layout.height);

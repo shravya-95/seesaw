@@ -59,7 +59,7 @@ function SeeSaw({navigation}){
   const [selectedBallSection, setSelectedBallSection]=useState(0)
   const [bottomDrawerVisible, setBottomDrawerVisible]=useState(false);
   const [isOpen, setIsOpen]=useState(false);
-  const [bottomDrawerColor, setBottomDrawerColor]=useState("None");
+  const [bottomDrawerColor, setBottomDrawerColor]=useState("rgba(0, 0, 0, 0)");
   const [toolTipVisible, setToolTipVisible] = useState(false)
   const modalRef = React.useRef();
   var selectedElementRef = React.useRef();
